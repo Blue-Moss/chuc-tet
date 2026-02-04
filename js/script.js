@@ -3078,31 +3078,31 @@ const soundManager = {
 	ctx: new (window.AudioContext || window.webkitAudioContext)(),
 	sources: {
 		lift: {
-			volume: 1,
+			volume: 0,
 			playbackRateMin: 0.85,
 			playbackRateMax: 0.95,
 			fileNames: ["lift1.mp3", "lift2.mp3", "lift3.mp3"],
 		},
 		burst: {
-			volume: 1,
+			volume: 0,
 			playbackRateMin: 0.8,
 			playbackRateMax: 0.9,
 			fileNames: ["burst1.mp3", "burst2.mp3"],
 		},
 		burstSmall: {
-			volume: 0.25,
+			volume: 0,
 			playbackRateMin: 0.8,
 			playbackRateMax: 1,
 			fileNames: ["burst-sm-1.mp3", "burst-sm-2.mp3"],
 		},
 		crackle: {
-			volume: 0.2,
+			volume: 0,
 			playbackRateMin: 1,
 			playbackRateMax: 1,
 			fileNames: ["crackle1.mp3"],
 		},
 		crackleSmall: {
-			volume: 0.3,
+			volume: 0,
 			playbackRateMin: 1,
 			playbackRateMax: 1,
 			fileNames: ["crackle-sm-1.mp3"],
