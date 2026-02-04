@@ -3074,7 +3074,7 @@ const Spark = {
 
 //音效管理器
 const soundManager = {
-	baseURL: "./audio/",
+	baseURL: "./audios/",
 	ctx: new (window.AudioContext || window.webkitAudioContext)(),
 	sources: {
 		lift: {
