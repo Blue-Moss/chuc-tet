@@ -361,3 +361,117 @@ body {
 	transition-timing-function: ease-out;
 	transition-duration: 0.4s;
 }
+
+/* =========================================== */
+/* 1. Nút Bốc Lì Xì (Giữ nguyên) */
+    #nut-li-xi {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        background: linear-gradient(to bottom, #ea2d2d, #a80000);
+        color: #ffeb3b;
+        padding: 12px 25px;
+        border-radius: 50px;
+        border: 2px solid #ffeb3b;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(255, 0, 0, 0.6);
+        animation: lac-lu 1s infinite alternate;
+        transition: transform 0.2s;
+    }
+    #nut-li-xi:hover { transform: scale(1.1); }
+    @keyframes lac-lu {
+        0% { transform: rotate(-5deg); }
+        100% { transform: rotate(5deg); }
+    }
+
+    /* 2. Hiệu ứng vật thể rơi (Giữ nguyên) */
+    .vat-the-roi {
+        position: fixed;
+        top: -50px;
+        z-index: 9990;
+        user-select: none;
+        pointer-events: none;
+        animation-name: roi-xuong;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
+    }
+    @keyframes roi-xuong {
+        0% { top: -50px; transform: translateX(0) rotate(0deg); opacity: 1; }
+        100% { top: 110vh; transform: translateX(100px) rotate(360deg); opacity: 0; }
+    }
+
+    /* 3. POPUP (MỚI) - Đẹp lung linh */
+    .popup-overlay {
+        display: none; /* Mặc định ẩn */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7); /* Nền tối mờ */
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-content {
+        background: linear-gradient(135deg, #fff0f0, #ffecec);
+        width: 90%;
+        max-width: 400px;
+        padding: 30px;
+        border-radius: 20px;
+        border: 4px solid #d60000;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        text-align: center;
+        animation: phong-to 0.4s ease-out; /* Hiệu ứng bung ra */
+        position: relative;
+    }
+
+    /* Trang trí viền hoa văn đơn giản */
+    .popup-content::before {
+        content: "🌸";
+        position: absolute; top: 10px; left: 10px; font-size: 25px;
+    }
+    .popup-content::after {
+        content: "🌸";
+        position: absolute; top: 10px; right: 10px; font-size: 25px;
+    }
+
+    .popup-title {
+        color: #d60000;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        border-bottom: 2px dashed #ffb100;
+        padding-bottom: 10px;
+    }
+
+    #loi-chuc-text {
+        font-size: 18px;
+        color: #333;
+        line-height: 1.5;
+        margin-bottom: 25px;
+        font-weight: 500;
+    }
+
+    .btn-close {
+        background-color: #d60000;
+        color: white;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .btn-close:hover { background-color: #a80000; }
+
+    @keyframes phong-to {
+        from { transform: scale(0.5); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }

@@ -417,7 +417,61 @@
         }
         document.addEventListener('click', autoPlayOnFirstClick);
     });
+
+	// ==========================================================
+function taoVatTheRoi() {
+        const icons = ['🌸', '🌼', '🧧', '✨', '💰'];
+        const icon = document.createElement('div');
+        icon.innerText = icons[Math.floor(Math.random() * icons.length)];
+        icon.classList.add('vat-the-roi');
+        icon.style.left = Math.random() * 100 + 'vw';
+        const size = Math.random() * 20 + 15;
+        icon.style.fontSize = size + 'px';
+        const duration = Math.random() * 3 + 4;
+        icon.style.animationDuration = duration + 's';
+        document.body.appendChild(icon);
+        setTimeout(() => { icon.remove(); }, duration * 1000);
+    }
+    setInterval(taoVatTheRoi, 400); // 400ms rơi 1 cái
+
+    // --- PHẦN 2: XỬ LÝ POPUP ---
+    const loiChuc = [
+        "Tiền vào như nước sông Đà\nTiền ra nhỏ giọt như cà phê phin! ☕",
+        "Năm mới chúc bạn:\nSớm có người yêu, ai có rồi thì sớm cưới! 💍",
+        "Công việc thăng tiến vù vù\nSếp thương đồng nghiệp mến! 🚀",
+        "Sức khỏe vô biên\nKiếm được nhiều tiền\nĐời sướng như tiên! 🧚‍♀️",
+        "Bớt 'nghiệp', bớt deadline\nChỉ toàn niềm vui và ting ting! 💸",
+        "Chúc bạn năm nay trúng số độc đắc\n(Nhớ mua vé nhé)! 🎫",
+        "Vạn sự như ý\nTỷ sự như mơ\nTriệu điều bất ngờ! ✨"
+    ];
+
+    function moPopup() {
+        // 1. Chọn lời chúc ngẫu nhiên
+        const randomChuc = loiChuc[Math.floor(Math.random() * loiChuc.length)];
+        
+        // 2. Gán nội dung vào popup (dùng innerHTML để xuống dòng được)
+        document.getElementById("loi-chuc-text").innerHTML = randomChuc.replace(/\n/g, "<br>");
+        
+        // 3. Hiển thị popup
+        document.getElementById("popup-lixi").style.display = "flex";
+    }
+
+    function dongPopup() {
+        // Ẩn popup đi
+        document.getElementById("popup-lixi").style.display = "none";
+    }
 </script>
+<button id="nut-li-xi" onclick="moPopup()">
+    🧧 Bốc Lì Xì
+</button>
+
+<div id="popup-lixi" class="popup-overlay">
+    <div class="popup-content">
+        <div class="popup-title">🧧 Lộc Đầu Năm 🧧</div>
+        <div id="loi-chuc-text">...</div>
+        <button class="btn-close" onclick="dongPopup()">Nhận Lộc ❤️</button>
+    </div>
+</div>
 	</body>
 	
 </html>
