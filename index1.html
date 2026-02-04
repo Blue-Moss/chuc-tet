@@ -432,9 +432,9 @@ function taoVatTheRoi() {
         document.body.appendChild(icon);
         setTimeout(() => { icon.remove(); }, duration * 1000);
     }
-    setInterval(taoVatTheRoi, 400); // 400ms rơi 1 cái
+    setInterval(taoVatTheRoi, 400); 
 
-    // --- PHẦN 2: XỬ LÝ POPUP ---
+    // --- PHẦN 2: XỬ LÝ POPUP + ẨN NÚT ---
     const loiChuc = [
         "Tiền vào như nước sông Đà\nTiền ra nhỏ giọt như cà phê phin! ☕",
         "Năm mới chúc bạn:\nSớm có người yêu, ai có rồi thì sớm cưới! 💍",
@@ -446,18 +446,23 @@ function taoVatTheRoi() {
     ];
 
     function moPopup() {
-        // 1. Chọn lời chúc ngẫu nhiên
+        // --- DÒNG MỚI THÊM VÀO ĐÂY ---
+        // Ẩn nút đi ngay lập tức sau khi bấm
+        document.getElementById("nut-li-xi").style.display = "none"; 
+        // -----------------------------
+
+        // Chọn lời chúc ngẫu nhiên
         const randomChuc = loiChuc[Math.floor(Math.random() * loiChuc.length)];
         
-        // 2. Gán nội dung vào popup (dùng innerHTML để xuống dòng được)
+        // Gán nội dung
         document.getElementById("loi-chuc-text").innerHTML = randomChuc.replace(/\n/g, "<br>");
         
-        // 3. Hiển thị popup
+        // Hiển thị popup
         document.getElementById("popup-lixi").style.display = "flex";
     }
 
     function dongPopup() {
-        // Ẩn popup đi
+        // Ẩn popup đi (và nút lì xì vẫn sẽ ẩn, không hiện lại)
         document.getElementById("popup-lixi").style.display = "none";
     }
 </script>
