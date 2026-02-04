@@ -3255,3 +3255,63 @@ if (IS_HEADER) {
 		});
 	}, 0);
 }
+
+// =================================================
+// 			Scrip POPUP Lời chúc sau 10s
+// ===================================================
+
+// --- CẤU HÌNH LỜI CHÚC ---
+// const loiChucSinhNhat = "Chúc mừng sinh nhật cậu! 🎂\n\nTuổi mới chúc cậu luôn rạng rỡ như pháo hoa, tiền nhiều như nước, bớt deadline và luôn vui vẻ nhé! Happy Birthday! ✨";
+
+const loiChucSinhNhat = "Chúc mừng năm mới! 🌸\n\nChúc anh năm mới đau đầu vì nhà giàu, mệt mỏi vì học giỏi, buồn phiền vì nhiều tiền, ngang trái vì xinh gái, và mất ngủ vì không có đối thủ. 😎 ✨";
+// 1. Đợi 10 giây (10000ms) sau khi tải trang thì mở Popup
+setTimeout(() => {
+    const overlay = document.getElementById('bd-overlay');
+    const card = document.querySelector('.bd-card');
+    
+    overlay.style.display = 'flex';
+    // Timeout nhỏ để CSS transition hoạt động (hiệu ứng zoom)
+    setTimeout(() => { 
+        card.classList.add('show'); 
+        // Bắt đầu chạy chữ
+        typeWriter(loiChucSinhNhat, 'bd-msg');
+    }, 100);
+}, 10000);
+
+// 2. Hàm gõ chữ (Typewriter)
+function typeWriter(text, elementId) {
+    const element = document.getElementById(elementId);
+    let i = 0;
+    const tocDoGo = 50; // Tốc độ gõ (càng nhỏ càng nhanh)
+
+    function typing() {
+        if (i < text.length) {
+            // Kiểm tra ký tự xuống dòng
+            if (text.charAt(i) === '\n') {
+                element.innerHTML += '<br>';
+            } else {
+                element.innerHTML += text.charAt(i);
+            }
+            i++;
+            setTimeout(typing, tocDoGo);
+        } else {
+            // KHI CHẠY XONG:
+            // Xóa con trỏ nhấp nháy
+            element.classList.remove('typing-cursor');
+            // Hiện nút đóng
+            document.getElementById('bd-close').classList.add('visible');
+        }
+    }
+    typing();
+}
+
+// 3. Hàm đóng Popup
+function closePopup() {
+    const overlay = document.getElementById('bd-overlay');
+    const card = document.querySelector('.bd-card');
+    
+    card.classList.remove('show');
+    setTimeout(() => {
+        overlay.style.display = 'none';
+    }, 500);
+}

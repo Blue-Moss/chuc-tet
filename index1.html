@@ -13,34 +13,7 @@
 		<!-- Thư viện CSS Clip Path Helper -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clippy.js/1.0.0/clippy.min.css" />
 		<style>
-			/* Khu vực demo ảnh dùng clip-path (tròn + trái tim) */
-			.shape-gallery {
-				display: flex;
-				gap: 24px;
-				justify-content: center;
-				align-items: center;
-				padding: 16px;
-			}
-			.shape-card {
-				width: 240px;
-				height: 240px;
-				position: relative;
-			}
-			.shape-card img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				display: block;
-			}
-			/* Ảnh tròn */
-			.shape-circle img {
-				border-radius: 50%;
-			}
-			/* Ảnh trái tim */
-			.shape-heart img {
-				clip-path: path("M 120 224 C 8 144 0 72 60 40 C 96 24 120 40 120 56 C 120 40 144 24 180 40 C 240 72 232 144 120 224 Z");
-				-webkit-clip-path: path("M 120 224 C 8 144 0 72 60 40 C 96 24 120 40 120 56 C 120 40 144 24 180 40 C 240 72 232 144 120 224 Z");
-			}
+
 			/* Fallback mask cho trình duyệt cũ */
 			@supports not (clip-path: path("M 120 224 C 8 144 0 72 60 40 C 96 24 120 40 120 56 C 120 40 144 24 180 40 C 240 72 232 144 120 224 Z")) {
 				.shape-heart img {
@@ -475,6 +448,20 @@ function taoVatTheRoi() {
         <div class="popup-title">🧧 Lộc Đầu Năm 🧧</div>
         <div id="loi-chuc-text">...</div>
         <button class="btn-close" onclick="dongPopup()">Nhận Lộc ❤️</button>
+    </div>
+</div>
+<!-- ===================================
+		POPUP
+=================================== -->
+<div id="bd-overlay">
+    <div class="bd-card">
+        <!-- <div class="bd-icon">🎂</div> -->
+		<div class="bd-icon">🌸</div>
+        <!-- <div class="bd-title">Happy Birthday!</div> -->
+        <div class="bd-title">Happy New Year!</div>
+        <div id="bd-msg" class="bd-msg typing-cursor"></div>
+
+        <button id="bd-close" onclick="closePopup()">Close! ❤️</button>
     </div>
 </div>
 	</body>
