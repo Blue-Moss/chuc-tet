@@ -76,7 +76,7 @@ const imageSources = [
 	// "./images/image3.jpeg",
 	// "./images/image4.jpeg",
 	// "./images/image5.jpeg",
-	"./images/1.jpg",
+	"./images/1.JPG",
 	"./images/2.jpg",
 	"./images/3.jpg",
 ];
