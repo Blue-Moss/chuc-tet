@@ -3263,7 +3263,7 @@ if (IS_HEADER) {
 // ===================================================
 
 // --- CẤU HÌNH LỜI CHÚC ---
-// const loiChucSinhNhat = "Chúc mừng sinh nhật cậu! 🎂\n\nTuổi mới chúc cậu luôn rạng rỡ như pháo hoa, tiền nhiều như nước, bớt deadline và luôn vui vẻ nhé! Happy Birthday! ✨";
+const loiChucSinhNhat = "Xin chào không biết e có đọc được tin nhắn này không nhưng mà “ Chúc em SNVV nha , mong rằng mọi thứ với em đều thuận lợi và gặp thật nhiều may mắn nha 😁“ \nKo biết cs của e dạo này sao rồi, mong rằng mọi thứ đều tốt 😆.\nNhớ cười nhiều lên nha, ăn ít đồ cay thôi, ngủ sớm và ra ngoài nhớ khoác áo vô nha 😁 \nTẠM BIỆT 😁";
 
 
 
@@ -3272,7 +3272,7 @@ if (IS_HEADER) {
 function typeWriter(text, elementId) {
     const element = document.getElementById(elementId);
     let i = 0;
-    const tocDoGo = 20; // Tốc độ gõ (càng nhỏ càng nhanh)
+    const tocDoGo = 10; // Tốc độ gõ (càng nhỏ càng nhanh)
 
     function typing() {
         if (i < text.length) {
