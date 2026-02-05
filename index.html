@@ -348,7 +348,30 @@
     <source src="./audio/Rain.mp3" type="audio/mp3">
 </audio>
 
+<div id="loi-chuc-box" class="loi-chuc-rieng"></div>
+
 <script>
+	const loiChucSinhNhat = "Xin chào không biết e có đọc được tin nhắn này không nhưng mà “ Chúc em SNVV nha , mong rằng mọi thứ với em đều thuận lợi và gặp thật nhiều may mắn nha 😁“ \nKo biết cs của e dạo này sao rồi, mong rằng mọi thứ đều tốt 😆. Cũng sắp tết rồi, chuẩn bị được nhiều chưa. Nếu có dịp đọc được, chúc em luôn khỏe, an yên và một năm mới thật bình an 👍🏻\nNhớ cười nhiều lên nha, ăn ít đồ cay thôi, ngủ sớm và ra ngoài nhớ khoác áo vô nha 😁 \n\n TẠM BIỆT 😁";
+
+const boxElement = document.getElementById("loi-chuc-box");
+let i = 0;
+const tocDoGo = 50; // Tốc độ gõ (số càng nhỏ gõ càng nhanh)
+
+function goChu() {
+    if (i < loiChucSinhNhat.length) {
+        // Xử lý xuống dòng
+        if (loiChucSinhNhat.charAt(i) === '\n') {
+            boxElement.innerHTML += '<br>';
+        } else {
+            boxElement.innerHTML += loiChucSinhNhat.charAt(i);
+        }
+        i++;
+        setTimeout(goChu, tocDoGo);
+    }
+}
+
+// Bắt đầu chạy hiệu ứng
+goChu();
     // Đoạn script xử lý bật tắt nhạc
     document.addEventListener('DOMContentLoaded', function() {
         const soundBtn = document.querySelector('.sound-btn');
@@ -434,6 +457,8 @@ function taoVatTheRoi() {
         // 5. Hiển thị popup
         document.getElementById("popup-lixi").style.display = "flex";
     }
+
+	// const loiChucSinhNhat = "13/02/2026\nXin chào không biết e có đọc được tin nhắn này không nhưng mà “ Chúc em SNVV nha , mong rằng mọi thứ với em đều thuận lợi và gặp thật nhiều may mắn nha 😁“ \nKo biết cs của e dạo này sao rồi, mong rằng mọi thứ đều tốt 😆. Cũng sắp tết rồi, chuẩn bị được nhiều chưa. \nNếu 1 lúc nào đó đọc được tin nhắn này thì chúc em tuổi mới nhiều sức khoẻ nha, lòng thì lúc nào cx an yên và sẽ có 1 cái tết thật vv, 1 năm tới thật nhiều điều tốt lành và 1 đời thật bình an nha 👍🏻👍🏻👍🏻👍🏻👍🏻\n\nNhớ cười nhiều lên nha, ăn ít đồ cay thôi, ngủ sớm và ra ngoài nhớ khoác áo vô nha 😁 \n\n TẠM BIỆT ";
 
     // --- HÀM 2: ĐÓNG POPUP & HIỆN THIỆP (Giữ nguyên logic cũ) ---
     function dongPopup() {

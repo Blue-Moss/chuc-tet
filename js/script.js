@@ -3265,7 +3265,7 @@ if (IS_HEADER) {
 // --- CẤU HÌNH LỜI CHÚC ---
 // const loiChucSinhNhat = "Chúc mừng sinh nhật cậu! 🎂\n\nTuổi mới chúc cậu luôn rạng rỡ như pháo hoa, tiền nhiều như nước, bớt deadline và luôn vui vẻ nhé! Happy Birthday! ✨";
 
-const loiChucSinhNhat = "13/02/2026\nXin chào không biết e có đọc được tin nhắn này không nhưng mà “ Chúc em SNVV nha , mong rằng mọi thứ với em đều thuận lợi và gặp thật nhiều may mắn nha 😁“ \nKo biết cs của e dạo này sao rồi, mong rằng mọi thứ đều tốt 😆. Cũng sắp tết rồi, chuẩn bị được nhiều chưa. \nNếu 1 lúc nào đó đọc được tin nhắn này thì chúc em tuổi mới nhiều sức khoẻ nha, lòng thì lúc nào cx an yên và sẽ có 1 cái tết thật vv, 1 năm tới thật nhiều điều tốt lành và 1 đời thật bình an nha 👍🏻👍🏻👍🏻👍🏻👍🏻\n\nNhớ cười nhiều lên nha, ăn ít đồ cay thôi, ngủ sớm và ra ngoài nhớ khoác áo vô nha 😁 \n\n TẠM BIỆT ";
+
 
 
 // 2. Hàm gõ chữ (Typewriter)
