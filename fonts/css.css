@@ -58,21 +58,19 @@ Gitee：https://gitee.com/nianbroken/Firework_Simulator
 /* --- CHÈN THÊM VÀO CUỐI PHẦN STYLE --- */
 
 /* Ép font chữ hệ thống cho Popup Lì Xì */
-#loi-chuc-text {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-    font-size: 16px !important;
-    font-weight: 500 !important;
+/* --- CHÈN/THAY THẾ VÀO CUỐI PHẦN STYLE --- */
+
+/* Phong cách thư viết tay (Patrick Hand) */
+#loi-chuc-text, #bd-msg {
+    font-family: 'Patrick Hand', cursive !important; /* Font viết tay */
+    font-size: 20px !important; /* Tăng cỡ chữ lên xíu cho dễ đọc */
     line-height: 1.6 !important;
-    color: #333 !important; /* Màu chữ đen xám cho dễ đọc trên nền sáng */
+    color: #444 !important; /* Màu xám đậm cho dịu mắt */
+    font-weight: 500 !important;
 }
 
-/* Ép font chữ hệ thống cho Popup Chúc mừng sinh nhật (Typing) */
+/* Riêng phần chữ chạy trên nền tối thì để màu trắng */
 #bd-msg {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-    font-size: 17px !important;
-    line-height: 1.6 !important;
-    color: #fff !important; /* Màu chữ trắng trên nền tối */
-    font-style: normal !important;
-    text-shadow: none !important;
-    white-space: pre-wrap !important; /* Giữ xuống dòng */
+    color: #fff !important;
+    text-shadow: 0 0 5px rgba(255, 105, 180, 0.5); /* Thêm chút bóng hồng cho lung linh */
 }
