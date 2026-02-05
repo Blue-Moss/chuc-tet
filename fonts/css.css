@@ -58,21 +58,30 @@ Gitee：https://gitee.com/nianbroken/Firework_Simulator
 /* --- CHÈN THÊM VÀO CUỐI PHẦN STYLE --- */
 
 /* Ép font chữ hệ thống cho Popup Lì Xì */
-#loi-chuc-text {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-    font-size: 16px !important;
-    font-weight: 500 !important;
-    line-height: 1.6 !important;
-    color: #333 !important; /* Màu chữ đen xám cho dễ đọc trên nền sáng */
+/* --- CODE FONT MỚI --- */
+
+/* Font Mali: Nét tròn, viết tay, hỗ trợ Tiếng Việt cực đẹp */
+#loi-chuc-text, #bd-msg {
+    font-family: 'Mali', cursive !important; 
+    font-weight: 500 !important;   /* Độ đậm vừa phải */
+    line-height: 1.6 !important;   /* Khoảng cách dòng thoáng */
 }
 
-/* Ép font chữ hệ thống cho Popup Chúc mừng sinh nhật (Typing) */
+/* 1. Tinh chỉnh cho phần Popup Lì Xì (Nền trắng) */
+#loi-chuc-text {
+    font-size: 18px !important;    /* Chữ to vừa phải */
+    color: #4a4a4a !important;     /* Màu xám đen dịu mắt hơn màu đen tuyền */
+}
+
+/* 2. Tinh chỉnh cho phần Chữ chạy (Nền tối) */
 #bd-msg {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-    font-size: 17px !important;
-    line-height: 1.6 !important;
-    color: #fff !important; /* Màu chữ trắng trên nền tối */
-    font-style: normal !important;
-    text-shadow: none !important;
-    white-space: pre-wrap !important; /* Giữ xuống dòng */
+    font-size: 19px !important;    /* To hơn xíu để nổi bật trên nền tối */
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Đổ bóng nhẹ để chữ nổi lên khỏi pháo hoa */
+}
+
+/* 3. Mobile (Điện thoại) thì cho chữ nhỏ lại xíu để đỡ tràn */
+@media (max-width: 768px) {
+    #loi-chuc-text { font-size: 16px !important; }
+    #bd-msg { font-size: 17px !important; }
 }
