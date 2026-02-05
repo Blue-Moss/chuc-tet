@@ -546,6 +546,32 @@ body {
     transform: scale(0.8); opacity: 0;
     transition: all 0.5s ease;
 }
+.card-loi-chuc {
+    /* --- 1. XỬ LÝ KÍCH THƯỚC (Để giống nhau trên mọi thiết bị) --- */
+    /* Mẹo: Dùng min() để bảo: Trên máy tính thì rộng 500px, 
+       nhưng trên điện thoại (nhỏ hơn 500px) thì lấy 90% màn hình */
+    width: min(90%, 500px); 
+    margin: 20px auto; /* Căn giữa màn hình */
+    
+    /* --- 2. XỬ LÝ XUỐNG DÒNG (\n) --- */
+    /* ĐÂY LÀ DÒNG QUAN TRỌNG NHẤT: Biến \n thành xuống dòng thật */
+    white-space: pre-line; 
+    
+    /* --- 3. TRANG TRÍ GIAO DIỆN --- */
+    background-color: rgba(0, 0, 0, 0.75); /* Nền tối mờ */
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    
+    /* --- 4. CỐ ĐỊNH PHÔNG CHỮ (Chống lỗi font lạ trên iPhone) --- */
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;       /* Cỡ chữ chuẩn dễ đọc */
+    line-height: 1.6;      /* Khoảng cách dòng thoáng */
+    font-weight: 500;      /* Độ dày chữ vừa phải */
+    font-style: normal;    /* Bắt buộc chữ đứng (không nghiêng) */
+    text-align: left;      /* Canh lề trái cho giống lá thư */
+}
 .container-text {
     /* --- PHẦN NỀN TỐI (Đã có) --- */
     background-color: rgba(0, 0, 0, 0.7); /* Tăng độ tối lên 0.7 cho dễ đọc hơn */
@@ -615,4 +641,39 @@ body {
 }
 #bd-close.visible {
     opacity: 1; pointer-events: auto; transform: translateY(0);
+}
+
+/* Dùng dấu thăng # để trỏ đích danh ID -> Quyền lực cao hơn class */
+#msg-container {
+    /* Ép buộc dùng font hệ thống (giống Facebook/Zalo) */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    
+    /* Cực kỳ quan trọng: Ép chữ đứng thẳng, KHÔNG ĐƯỢC nghiêng */
+    font-style: normal !important; 
+    
+    /* Chỉnh màu và độ dày */
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    
+    /* Reset các hiệu ứng lạ của template */
+    text-shadow: none !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    
+    /* Giữ nguyên định dạng khung */
+    white-space: pre-line !important;
+    width: min(90%, 500px) !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    padding: 20px !important;
+    border-radius: 15px !important;
+    margin: 20px auto !important;
+}
+
+/* Đề phòng trường hợp template dùng thẻ <p> hoặc <span> bên trong */
+#msg-container * {
+    font-family: inherit !important;
+    font-style: normal !important;
+    color: #ffffff !important;
 }

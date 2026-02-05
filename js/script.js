@@ -3263,7 +3263,7 @@ if (IS_HEADER) {
 // ===================================================
 
 // --- CẤU HÌNH LỜI CHÚC ---
-const loiChucSinhNhat = "Xin chào không biết e có đọc được tin nhắn này không nhưng mà “ Chúc em SNVV nha , mong rằng mọi thứ với em đều thuận lợi và gặp thật nhiều may mắn nha 😁“ \nKo biết cs của e dạo này sao rồi, mong rằng mọi thứ đều tốt 😆.\nNhớ cười nhiều lên nha, ăn ít đồ cay thôi, ngủ sớm và ra ngoài nhớ khoác áo vô nha 😁 \nTẠM BIỆT 😁";
+// const loiChucSinhNhat = "Xin chào không biết e có đọc được tin nhắn này không nhưng mà “ Chúc em SNVV nha , mong rằng mọi thứ với em đều thuận lợi và gặp thật nhiều may mắn nha 😁“ \nKo biết cs của e dạo này sao rồi, mong rằng mọi thứ đều tốt 😆.\nNhớ cười nhiều lên nha, ăn ít đồ cay thôi, ngủ sớm và ra ngoài nhớ khoác áo vô nha 😁 \nTẠM BIỆT 😁";
 
 
 
