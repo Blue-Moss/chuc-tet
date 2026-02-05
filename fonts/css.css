@@ -5,7 +5,24 @@ Gitee：https://gitee.com/nianbroken/Firework_Simulator
 本项目采用 Apache-2.0 许可证
 简而言之，你可以自由使用、修改和分享本项目的代码，但前提是在其衍生作品中必须保留原始许可证和版权信息，并且必须以相同的许可证发布所有修改过的代码。
 */
+.container-text {
+    /* --- PHẦN NỀN TỐI (Đã có) --- */
+    background-color: rgba(0, 0, 0, 0.7); /* Tăng độ tối lên 0.7 cho dễ đọc hơn */
+    border-radius: 15px;
+    padding: 20px;
+    color: #ffffff !important;
 
+    /* --- PHẦN SỬA CHỮ (Thêm mới) --- */
+    /* 1. Đổi sang phông không chân (giống Facebook/Web thường) */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+    
+    /* 2. Bắt buộc chữ đứng thẳng (Bỏ in nghiêng) */
+    font-style: normal !important;
+    
+    /* 3. Chỉnh độ dày và khoảng cách dòng */
+    font-weight: 500;
+    line-height: 1.6;
+}
 /* cyrillic */
 @font-face {
 	font-family: "Russo One";
