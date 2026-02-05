@@ -85,6 +85,8 @@ const imageSources = [
 	"./images/7.JPG",
 	"./images/8.jpg",
 	"./images/9.jpg",
+	"./images/11.jpg",
+	
 ];
 const loadedImages = [];
 const imageBursts = [];
@@ -3263,26 +3265,26 @@ if (IS_HEADER) {
 // --- CẤU HÌNH LỜI CHÚC ---
 // const loiChucSinhNhat = "Chúc mừng sinh nhật cậu! 🎂\n\nTuổi mới chúc cậu luôn rạng rỡ như pháo hoa, tiền nhiều như nước, bớt deadline và luôn vui vẻ nhé! Happy Birthday! ✨";
 
-const loiChucSinhNhat = "Chúc mừng năm mới! 🌸\n\nChúc anh năm mới đau đầu vì nhà giàu, mệt mỏi vì học giỏi, buồn phiền vì nhiều tiền, ngang trái vì xinh gái, và mất ngủ vì không có đối thủ. 😎 ✨";
+const loiChucSinhNhat = "13/02/2026\nXin chào không biết e có đọc được tin nhắn này không nhưng mà “ Chúc em SNVV nha , mong rằng mọi thứ với em đều thuận lợi và gặp thật nhiều may mắn nha 😁“ \nKo biết cs của e dạo này sao rồi, mong rằng mọi thứ đều tốt 😆. Cũng sắp tết rồi, chuẩn bị được nhiều chưa. \nNếu 1 lúc nào đó đọc được tin nhắn này thì chúc em tuổi mới nhiều sức khoẻ nha, lòng thì lúc nào cx an yên và sẽ có 1 cái tết thật vv, 1 năm tới thật nhiều điều tốt lành và 1 đời thật bình an nha 👍🏻👍🏻👍🏻👍🏻👍🏻\n\nNhớ cười nhiều lên nha, ăn ít đồ cay thôi, ngủ sớm và ra ngoài nhớ khoác áo vô nha 😁";
 // 1. Đợi 10 giây (10000ms) sau khi tải trang thì mở Popup
-setTimeout(() => {
-    const overlay = document.getElementById('bd-overlay');
-    const card = document.querySelector('.bd-card');
+// setTimeout(() => {
+//     const overlay = document.getElementById('bd-overlay');
+//     const card = document.querySelector('.bd-card');
     
-    overlay.style.display = 'flex';
-    // Timeout nhỏ để CSS transition hoạt động (hiệu ứng zoom)
-    setTimeout(() => { 
-        card.classList.add('show'); 
-        // Bắt đầu chạy chữ
-        typeWriter(loiChucSinhNhat, 'bd-msg');
-    }, 100);
-}, 10000);
+//     overlay.style.display = 'flex';
+//     // Timeout nhỏ để CSS transition hoạt động (hiệu ứng zoom)
+//     setTimeout(() => { 
+//         card.classList.add('show'); 
+//         // Bắt đầu chạy chữ
+//         typeWriter(loiChucSinhNhat, 'bd-msg');
+//     }, 100);
+// }, 10000);
 
 // 2. Hàm gõ chữ (Typewriter)
 function typeWriter(text, elementId) {
     const element = document.getElementById(elementId);
     let i = 0;
-    const tocDoGo = 50; // Tốc độ gõ (càng nhỏ càng nhanh)
+    const tocDoGo = 20; // Tốc độ gõ (càng nhỏ càng nhanh)
 
     function typing() {
         if (i < text.length) {

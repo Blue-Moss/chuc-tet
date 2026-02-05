@@ -1,206 +1,502 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8" />
-    <title>Mở Quà Bí Mật</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <meta name="theme-color" content="#000000" />
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet" />
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Trình mô phỏng pháo hoa</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="theme-color" content="#000000" />
+		<link rel="shortcut icon" type="image/png" href="./images/favicon.png" />
+		<link rel="icon" type="image/png" href="./images/favicon.png" />
+		<link rel="apple-touch-icon-precomposed" href="./images/favicon.png" />
+		<!-- Thư viện CSS Clip Path Helper -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clippy.js/1.0.0/clippy.min.css" />
+		<style>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+			/* Fallback mask cho trình duyệt cũ */
+			@supports not (clip-path: path("M 120 224 C 8 144 0 72 60 40 C 96 24 120 40 120 56 C 120 40 144 24 180 40 C 240 72 232 144 120 224 Z")) {
+				.shape-heart img {
+					mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><path d="M120 224 C8 144 0 72 60 40 C96 24 120 40 120 56 C120 40 144 24 180 40 C240 72 232 144 120 224 Z" fill="white"/></svg>');
+					-webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><path d="M120 224 C8 144 0 72 60 40 C96 24 120 40 120 56 C120 40 144 24 180 40 C240 72 232 144 120 224 Z" fill="white"/></svg>');
+					mask-size: contain;
+					-webkit-mask-size: contain;
+					mask-repeat: no-repeat;
+					-webkit-mask-repeat: no-repeat;
+				}
+			}
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+			/* Layer chứa lời chúc bay trên nền pháo hoa */
+			.wishes-layer {
+				position: absolute;
+				inset: 0;
+				z-index: 10; /* Hiển thị trên canvas */
+				pointer-events: none; /* không chặn click vào canvas / nút điều khiển */
+				transform-origin: center center;
+				transform-style: preserve-3d; /* Cho phép 3D transform */
+				will-change: transform; /* Tối ưu performance */
+			}
 
-        #password-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Dancing Script', cursive;
-        }
+			/* Tắt transition khi đang drag để giảm lag */
+			.wishes-layer.dragging {
+				transition: none;
+			}
 
-        .pw-box {
-            width: 90%;
-            max-width: 360px;
-            padding: 30px 20px;
-            background: #111;
-            border: 2px solid #ff9ad9;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 0 25px rgba(255, 154, 217, 0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+			/* Wrapper anim bay lên (dùng transform riêng) */
+			.wish-wrapper {
+				position: absolute;
+				bottom: -3rem;
+				left: 50%;
+				transform: translateX(-50%) translateY(0);
+				opacity: 0;
+				pointer-events: none; /* bản thân wrapper không nhận sự kiện */
+			}
 
-        .pw-box h2 {
-            color: #ff9ad9;
-            margin: 0 0 25px 0;
-            font-size: 1.8rem;
-            text-shadow: 0 0 10px rgba(255, 154, 217, 0.5);
-        }
+			/* Câu chúc màu hồng phát sáng, có thể xoay / thu phóng bằng tay */
+			.wish-text {
+				display: inline-block;
+				font-size: 1.1rem;
+				padding: 0.4rem 1rem;
+				border-radius: 999px;
+				color: #ff9ad9;
+				text-shadow:
+					0 0 6px rgba(255, 105, 180, 0.9),
+					0 0 18px rgba(255, 20, 147, 0.8);
+				background: rgba(0, 0, 0, 0.3);
+				border: 1px solid rgba(255, 192, 203, 0.7);
+				box-shadow:
+					0 0 14px rgba(255, 105, 180, 0.7),
+					0 0 32px rgba(255, 20, 147, 0.4);
+				white-space: nowrap;
+				transform-origin: center center;
+				pointer-events: auto; /* cho phép chạm/drag để xoay, scale */
+			}
 
-        /* --- XỬ LÝ CHỐNG LỆCH TUYỆT ĐỐI --- */
+			/* Responsive cho mobile */
+			@media (max-width: 768px) {
+				.wish-text {
+					font-size: 0.9rem; /* Tăng font-size một chút để đọc tốt hơn */
+					padding: 0.35rem 1rem; /* Tăng padding để có không gian hơn */
+					max-width: 92vw; /* Tăng max-width để hiển thị nhiều chữ hơn */
+					min-width: 200px; /* Đảm bảo chiều rộng tối thiểu */
+					white-space: normal; /* Cho phép xuống dòng trên mobile */
+					word-wrap: break-word;
+					word-break: break-word; /* Ngắt từ tốt hơn */
+					display: -webkit-box;
+					-webkit-line-clamp: 2; /* Giới hạn tối đa 2 dòng */
+					line-clamp: 2; /* Thuộc tính chuẩn */
+					-webkit-box-orient: vertical;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					line-height: 1.5; /* Tăng line-height để đọc tốt hơn */
+				}
+			}
+
+			@media (max-width: 480px) {
+				.wish-text {
+					font-size: 0.8rem;
+					padding: 0.3rem 0.85rem;
+					max-width: 94vw; /* Tăng max-width trên mobile nhỏ */
+					min-width: 180px; /* Chiều rộng tối thiểu */
+					-webkit-line-clamp: 2; /* Vẫn giới hạn 2 dòng trên mobile nhỏ */
+					line-clamp: 2; /* Thuộc tính chuẩn */
+					line-height: 1.4;
+				}
+			}
+
+			/* Bay chậm đều từ dưới lên trên */
+			@keyframes wishFloatUp {
+				0% {
+					opacity: 0;
+					transform: translateX(-50%) translateY(10vh);
+				}
+				15% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+					transform: translateX(-50%) translateY(-110vh);
+				}
+			}
+
+			.wish-animate {
+				animation: wishFloatUp 7s linear forwards;
+			}
+
+			/* Ảnh bay lên cùng câu chúc */
+			.wish-image {
+				display: inline-block;
+				width: 120px;
+				height: 120px;
+				object-fit: cover;
+				border-radius: 12px;
+				border: 3px solid rgba(255, 192, 203, 0.9);
+				box-shadow:
+					0 0 20px rgba(255, 105, 180, 0.8),
+					0 0 40px rgba(255, 20, 147, 0.6),
+					0 0 60px rgba(255, 20, 147, 0.4),
+					inset 0 0 20px rgba(255, 192, 203, 0.3);
+				transform-origin: center center;
+				pointer-events: auto;
+				animation: imageGlow 2s ease-in-out infinite alternate;
+			}
+
+			/* Responsive ảnh bay lên cho mobile */
+			@media (max-width: 768px) {
+				.wish-image {
+					width: 80px;
+					height: 80px;
+					border-width: 2px;
+					border-radius: 8px;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.wish-image {
+					width: 60px;
+					height: 60px;
+					border-width: 2px;
+					border-radius: 6px;
+				}
+			}
+
+			/* Hiệu ứng phát sáng cho ảnh */
+			@keyframes imageGlow {
+				0% {
+					box-shadow:
+						0 0 20px rgba(255, 105, 180, 0.8),
+						0 0 40px rgba(255, 20, 147, 0.6),
+						0 0 60px rgba(255, 20, 147, 0.4),
+						inset 0 0 20px rgba(255, 192, 203, 0.3);
+					border-color: rgba(255, 192, 203, 0.9);
+				}
+				100% {
+					box-shadow:
+						0 0 30px rgba(255, 105, 180, 1),
+						0 0 60px rgba(255, 20, 147, 0.9),
+						0 0 90px rgba(255, 20, 147, 0.7),
+						inset 0 0 30px rgba(255, 192, 203, 0.5);
+					border-color: rgba(255, 255, 255, 1);
+				}
+			}
+
+			/* Wrapper cho ảnh */
+			.wish-image-wrapper {
+				position: absolute;
+				bottom: -3rem;
+				left: 50%;
+				transform: translateX(-50%) translateY(0);
+				opacity: 0;
+				pointer-events: none;
+			}
+
+			/* Ẩn nút pause và nút cài đặt */
+			.pause-btn,
+			.settings-btn {
+				display: none !important;
+			}
+		</style>
+		<meta name="msapplication-TileColor" content="#000000" />
+		<meta name="msapplication-TileImage" content="./images/favicon.png" />
+		<link href="./fonts/css.css" rel="stylesheet" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet" />
+		<link rel="stylesheet" href="./css/style.css" />
+	</head>
+	<body>
+		<!-- partial:index.partial.html -->
+		<!-- SVG Spritesheet -->
+		<div style="height: 0; width: 0; position: absolute; visibility: hidden">
+			<svg xmlns="http://www.w3.org/2000/svg">
+				<symbol id="icon-play" viewBox="0 0 24 24">
+					<path d="M8 5v14l11-7z" />
+				</symbol>
+				<symbol id="icon-pause" viewBox="0 0 24 24">
+					<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+				</symbol>
+				<symbol id="icon-close" viewBox="0 0 24 24">
+					<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+				</symbol>
+				<symbol id="icon-settings" viewBox="0 0 24 24">
+					<path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
+				</symbol>
+				<symbol id="icon-sound-on" viewBox="0 0 24 24">
+					<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+				</symbol>
+				<symbol id="icon-sound-off" viewBox="0 0 24 24">
+					<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+				</symbol>
+				<symbol id="icon-stop-wishes" viewBox="0 0 24 24">
+					<path d="M6 6h12v12H6z" />
+				</symbol>
+			</svg>
+		</div>
+		<!-- App -->
+		<div class="container">
+			<div class="stage-container remove">
+				<!-- Layer lời chúc bay trên trời -->
+				<div class="wishes-layer" id="wishes-layer"></div>
+				<div class="canvas-container">
+					<canvas id="trails-canvas"> </canvas>
+					<canvas id="main-canvas"> </canvas>
+				</div>
+				<div class="controls">
+					<div class="btn pause-btn">
+						<svg fill="white" width="24" height="24">
+							<use href="#icon-pause" xlink:href="#icon-pause"></use>
+						</svg>
+					</div>
+					<div class="btn sound-btn">
+						<svg fill="white" width="24" height="24">
+							<use href="#icon-sound-off" xlink:href="#icon-sound-off"></use>
+						</svg>
+					</div>
+					<div class="btn stop-wishes-btn">
+						<svg fill="white" width="24" height="24">
+							<use href="#icon-stop-wishes" xlink:href="#icon-stop-wishes"></use>
+						</svg>
+					</div>
+					<div class="btn settings-btn">
+						<svg fill="white" width="24" height="24">
+							<use href="#icon-settings" xlink:href="#icon-settings"></use>
+						</svg>
+					</div>
+				</div>
+				<div class="menu hide">
+					<div class="menu__inner-wrap">
+						<div class="btn btn--bright close-menu-btn">
+							<svg fill="white" width="24" height="24">
+								<use href="#icon-close" xlink:href="#icon-close"></use>
+							</svg>
+						</div>
+						<div class="menu__header">Cài đặt</div>
+						<div class="menu__subheader">Để biết thêm thông tin hãy nhấp vào bất kỳ nhãn nào</div>
+						<form>
+							<div class="form-option form-option--select">
+								<label class="shell-type-label"> Loại pháo hoa </label>
+								<select class="shell-type"></select>
+							</div>
+							<div class="form-option form-option--select">
+								<label class="shell-size-label"> Kích thước pháo hoa </label>
+								<select class="shell-size"></select>
+							</div>
+							<div class="form-option form-option--select">
+								<label class="quality-ui-label"> Chất lượng hiển thị </label>
+								<select class="quality-ui"></select>
+							</div>
+							<div class="form-option form-option--select">
+								<label class="sky-lighting-label"> Độ sáng bầu trời </label>
+								<select class="sky-lighting"></select>
+							</div>
+							<div class="form-option form-option--select">
+								<label class="scaleFactor-label"> Thu phóng </label>
+								<select class="scaleFactor"></select>
+							</div>
+							<div class="form-option form-option--checkbox">
+								<label class="word-shell-label"> Pháo hoa chữ </label>
+								<input class="word-shell" type="checkbox" />
+							</div>
+							<div class="form-option form-option--checkbox">
+								<label class="auto-launch-label"> Tự động bắn pháo </label>
+								<input class="auto-launch" type="checkbox" />
+							</div>
+							<div class="form-option form-option--checkbox form-option--finale-mode">
+								<label class="finale-mode-label"> Bắn nhiều pháo hoa cùng lúc </label>
+								<input class="finale-mode" type="checkbox" />
+							</div>
+							<div class="form-option form-option--checkbox">
+								<label class="hide-controls-label"> Ẩn nút điều khiển </label>
+								<input class="hide-controls" type="checkbox" />
+							</div>
+							<div class="form-option form-option--checkbox form-option--fullscreen">
+								<label class="fullscreen-label"> Toàn màn hình </label>
+								<input class="fullscreen" type="checkbox" />
+							</div>
+							<div class="form-option form-option--checkbox">
+								<label class="long-exposure-label"> Giữ vệt sáng pháo hoa </label>
+								<input class="long-exposure" type="checkbox" />
+							</div>
+						</form>
+						<div class="credits">
+							<p class="copyright">
+								<script>
+									var mydate = new Date();
+									document.writeln("Copyright&nbsp;&copy;&nbsp;2021 - " + mydate.getFullYear() + '&nbsp;<a target="_blank" href="https://www.nianbroken.top/">碎念_Nian</a><br />All&nbsp;Rights&nbsp;Reserved');
+								</script>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="help-modal">
+				<div class="help-modal__overlay"></div>
+				<div class="help-modal__dialog">
+					<div class="help-modal__header"></div>
+					<div class="help-modal__body"></div>
+					<button type="button" class="help-modal__close-btn">Đóng</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- partial -->
+		<script src="./js/fscreen.js"></script>
+		<script src="./js/Stage.js"></script>
+		<script src="./js/MyMath.js"></script>
+		<script src="./js/script.js"></script>
+	<audio id="audio-player" loop>
+    <source src="./audio/Rain.mp3" type="audio/mp3">
+</audio>
+
+<script>
+    // Đoạn script xử lý bật tắt nhạc
+    document.addEventListener('DOMContentLoaded', function() {
+        const soundBtn = document.querySelector('.sound-btn');
+        const audio = document.getElementById('audio-player');
+        const iconUse = soundBtn.querySelector('use');
         
-        /* 1. Tạo một khung bao ngoài input để vẽ gạch chân */
-        .input-wrapper {
-            position: relative;
-            width: 80%;
-            border-bottom: 2px solid #ff9ad9; /* Đường kẻ nằm ở đây */
-            margin-bottom: 25px;
-            transition: border-color 0.3s;
-        }
+        // Mặc định trình duyệt chặn tự phát nhạc, nên ta cần bắt sự kiện click đầu tiên
+        let isPlaying = false;
 
-        /* 2. Style cho input: Trong suốt, không viền */
-        .pw-box input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: white;
-            padding: 10px 0;
-            font-size: 1.5rem;
-            text-align: center;
-            outline: none !important;
-            letter-spacing: 2px; /* Giãn chữ ra cho đẹp */
-        }
-
-        /* 3. QUAN TRỌNG: Ẩn nút "con mắt" mặc định của trình duyệt */
-        /* Chrome/Opera/Safari */
-        input::-webkit-input-placeholder { color: rgba(255, 154, 217, 0.5); }
-        input::-webkit-credentials-auto-fill-button { visibility: hidden; pointer-events: none; position: absolute; right: 0; }
-        input::-ms-reveal, input::-ms-clear { display: none; }
-        input::-webkit-contacts-auto-fill-button { visibility: hidden; display: none !important; pointer-events: none; position: absolute; right: 0; }
-        
-        /* Hiệu ứng focus: Đổi màu đường kẻ của wrapper cha */
-        .input-wrapper:focus-within {
-            border-bottom-color: #ff1493;
-        }
-
-        /* Nút bấm */
-        .pw-box button {
-            background: #ff9ad9;
-            color: #000;
-            border: none;
-            padding: 12px 40px;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-            font-family: Arial, sans-serif;
-        }
-
-        .pw-box button:active {
-            transform: scale(0.95);
-        }
-
-        /* Vùng gợi ý */
-        #hint-area {
-            width: 100%;
-            margin-top: 20px;
-            min-height: 50px; /* Cố định chiều cao để không nhảy khung */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hint-text {
-            color: #ff9ad9;
-            font-size: 1rem;
-            margin: 0;
-            opacity: 0.9;
-            font-style: italic;
-            line-height: 1.4;
-        }
-
-        .shake { animation: shake 0.4s ease-in-out; }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-6px); }
-            40%, 80% { transform: translateX(6px); }
-        }
-    </style>
-</head>
-<body>
-
-    <div id="password-overlay">
-        <div class="pw-box" id="pw-box">
-            <h2>Nhập mật mã để xem</h2>
-            <h2>"Ai đẹp trai nhất nhà?"</h2>
-            <div class="input-wrapper">
-                <input type="password" id="password-input" placeholder="..." autocomplete="new-password" autofocus>
-            </div>
-
-            <button id="pw-submit">Xác nhận</button>
-            
-            <div id="hint-area">
-                <p class="hint-text" id="hint-content"></p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- CẤU HÌNH ---
-            const CONFIG = {
-                password: "hien",             
-                targetPage: "index1.html",   
-                hints: [
-                    "Gợi ý 1: Có 4 chữ cái, bắt đầu bằng chữ 'Y'...",
-                    "Gợi ý 2: Một người đẫ đẹp trai còn ngoan nhất nhà nữa",
-                    "Mật mã là: 'Hien' (viết thường không dấu nhé)"
-                ]
-            };
-            // ----------------
-
-            let attempt = 0;
-            const pwBox = document.getElementById('pw-box');
-            const input = document.getElementById('password-input');
-            const submitBtn = document.getElementById('pw-submit');
-            const hintContent = document.getElementById('hint-content');
-
-            // Hàm xử lý kiểm tra
-            function checkPassword() {
-                const val = input.value.trim().toLowerCase();
-                
-                if (val === CONFIG.password) {
-                    window.location.href = CONFIG.targetPage;
-                } else {
-                    attempt++;
-                    input.value = ""; 
-                    input.focus(); 
-
-                    pwBox.classList.add('shake');
-                    setTimeout(() => pwBox.classList.remove('shake'), 400);
-
-                    if (attempt === 1) hintContent.innerText = CONFIG.hints[0];
-                    else if (attempt === 2) hintContent.innerText = CONFIG.hints[1];
-                    else hintContent.innerText = CONFIG.hints[2];
-                }
+        soundBtn.addEventListener('click', function() {
+            if (isPlaying) {
+                audio.pause();
+                // Đổi icon thành tắt tiếng
+                iconUse.setAttribute('href', '#icon-sound-off');
+                iconUse.setAttribute('xlink:href', '#icon-sound-off');
+                isPlaying = false;
+            } else {
+                audio.play().then(() => {
+                    // Đổi icon thành bật tiếng
+                    iconUse.setAttribute('href', '#icon-sound-on');
+                    iconUse.setAttribute('xlink:href', '#icon-sound-on');
+                    isPlaying = true;
+                }).catch(error => {
+                    console.log("Trình duyệt chặn phát nhạc: ", error);
+                });
             }
-
-            submitBtn.addEventListener('click', checkPassword);
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') checkPassword();
-            });
         });
-    </script>
-</body>
+
+        // (Tùy chọn) Tự động phát nhạc khi người dùng click bất kỳ đâu trên màn hình lần đầu tiên
+        // Vì chính sách trình duyệt không cho nhạc tự chạy nếu chưa tương tác
+        function autoPlayOnFirstClick() {
+            audio.play().then(() => {
+                iconUse.setAttribute('href', '#icon-sound-on');
+                iconUse.setAttribute('xlink:href', '#icon-sound-on');
+                isPlaying = true;
+                // Xóa sự kiện này sau khi đã chạy 1 lần
+                document.removeEventListener('click', autoPlayOnFirstClick);
+            }).catch(() => {});
+        }
+        document.addEventListener('click', autoPlayOnFirstClick);
+    });
+
+	// ==========================================================
+function taoVatTheRoi() {
+        const icons = ['🎂', '🎈', '🎁', '✨', '🎉', '🍰'];
+        const icon = document.createElement('div');
+        icon.innerText = icons[Math.floor(Math.random() * icons.length)];
+        icon.classList.add('vat-the-roi');
+        icon.style.left = Math.random() * 100 + 'vw';
+        const size = Math.random() * 20 + 15;
+        icon.style.fontSize = size + 'px';
+        const duration = Math.random() * 3 + 4;
+        icon.style.animationDuration = duration + 's';
+        document.body.appendChild(icon);
+        setTimeout(() => { icon.remove(); }, duration * 1000);
+    }
+    setInterval(taoVatTheRoi, 400); 
+
+    // --- PHẦN 2: XỬ LÝ POPUP + ẨN NÚT ---
+    function moPopup() {
+        // 1. Ẩn nút đi ngay lập tức
+        document.getElementById("nut-li-xi").style.display = "none"; 
+
+        // 2. CẤU HÌNH ẢNH VÀ LỜI CHÚC
+        const linkAnh = "./images/10.png"; // Nhớ kiểm tra đúng tên file ảnh của bạn nhé
+        
+        // Giữ nguyên nội dung của bạn có \n
+        const loiChucCoDinh = "“Cái nhẫn này💍\n\nTrước đây anh mua để định tặng em trong lần mình hẹn gặp nhau, nhưng rồi lại không có cơ hội gặp.\nTặng cho người khác thì anh thấy không hay lắm, mà bỏ đi thì anh cũng không nỡ.\nNên anh muốn hỏi em : em có muốn nhận nó không?\nNếu có thì nói anh biết nha, còn nếu không thì cũng không sao cả 🙂”\n\nChúc em sinh nhật vui vẻ🎁";
+
+        // 3. Tạo mã HTML
+        // --- QUAN TRỌNG: Thêm .replace(/\n/g, '<br>') để đổi \n thành thẻ xuống dòng ---
+        const noiDungHienThi = `
+            <img src="${linkAnh}" alt="Gift" style="width: 100%; max-width: 300px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+            
+            <div style="font-size: 16px; font-weight: normal; color: #333; line-height: 1.6; text-align: left;">
+                ${loiChucCoDinh.replace(/\n/g, '<br>')} 
+            </div>
+        `;
+        
+        // 4. Gán nội dung vào popup
+        document.getElementById("loi-chuc-text").innerHTML = noiDungHienThi;
+        
+        // 5. Hiển thị popup
+        document.getElementById("popup-lixi").style.display = "flex";
+    }
+
+    // --- HÀM 2: ĐÓNG POPUP & HIỆN THIỆP (Giữ nguyên logic cũ) ---
+    function dongPopup() {
+        // Ẩn popup Lì xì
+        document.getElementById('popup-lixi').style.display = 'none';
+
+        // Gọi ngay hàm hiển thị thiệp
+        hienThiThiep();
+    }
+
+    // --- HÀM 3: Xử lý hiện thiệp và gọi gõ chữ ---
+    function hienThiThiep() {
+        const overlay = document.getElementById('bd-overlay');
+        const card = document.querySelector('.bd-card');
+        const msgBox = document.getElementById('bd-msg');
+
+        // Reset nội dung cũ
+        msgBox.innerHTML = ''; 
+        msgBox.classList.add('typing-cursor'); 
+        
+        // Ẩn nút "Cảm ơn"
+        const btnClose = document.getElementById('bd-close');
+        if(btnClose) btnClose.classList.remove('visible');
+
+        // Hiển thị khung nền tối
+        overlay.style.display = 'flex';
+        
+        // Delay hiệu ứng
+        setTimeout(() => { 
+            card.classList.add('show'); 
+            // Gọi hàm gõ chữ (Đảm bảo bạn đã khai báo biến loiChucSinhNhat ở đâu đó)
+            if (typeof typeWriter === "function" && typeof loiChucSinhNhat !== "undefined") {
+                typeWriter(loiChucSinhNhat, 'bd-msg');
+            }
+        }, 100);
+    }
+
+</script>
+<button id="nut-li-xi" onclick="moPopup()" style="background: linear-gradient(to right, #ff758c, #ff7eb3);">
+    🎂 Open me 🎂
+</button>
+
+<div id="popup-lixi" class="popup-overlay">
+    <div class="popup-content">
+        <div class="popup-title">Happy Birthday 🎉</div>
+        <div id="loi-chuc-text">...</div>
+        <button class="btn-close" onclick="dongPopup()">Đọc tiếp ❤️</button>
+    </div>
+</div>
+<!-- ===================================
+		POPUP
+=================================== -->
+<div id="bd-overlay">
+    <div class="bd-card">
+        <div class="bd-icon">🎂</div>
+        
+        <div class="bd-title">Happy Birthday!</div>
+        
+        <div id="bd-msg" class="bd-msg typing-cursor"></div>
+
+        <button id="bd-close" onclick="closePopup()">Hạnh phúc nhé! ❤️</button>
+    </div>
+</div>
+	</body>
+	
 </html>
