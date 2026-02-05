@@ -546,7 +546,24 @@ body {
     transform: scale(0.8); opacity: 0;
     transition: all 0.5s ease;
 }
+/* Giả sử class bao quanh đoạn text là .message-content */
+.message-content p,
+.message-content h1 {
+    /* 1. Đổi sang màu trắng tinh để tương phản tốt nhất */
+    color: #ffffff !important; 
 
+    /* 2. Dùng phông không chân (sans-serif) hiện đại, dễ đọc trên màn hình */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    /* 3. Tăng độ dày của chữ lên một chút nếu cần */
+    font-weight: 500; 
+
+    /* 4. Tăng khoảng cách dòng cho thoáng mắt */
+    line-height: 1.6;
+
+    /* 5. (Tùy chọn) Thêm bóng nhẹ cho chữ để nó tách biệt khỏi nền */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
 .bd-card.show {
     transform: scale(1); opacity: 1;
 }
