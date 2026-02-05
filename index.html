@@ -347,11 +347,82 @@
 	<audio id="audio-player" loop>
     <source src="./audio/Rain.mp3" type="audio/mp3">
 </audio>
-<div id="msg-container" class="card-loi-chuc"></div>
+
 <script>
-const loiChucSinhNhat = "Xin chào không biết e có đọc được tin nhắn này không nhưng mà “ Chúc em SNVV nha , mong rằng mọi thứ với em đều thuận lợi và gặp thật nhiều may mắn nha 😁“ \nKo biết cs của e dạo này sao rồi, mong rằng mọi thứ đều tốt 😆.\nNhớ cười nhiều lên nha, ăn ít đồ cay thôi, ngủ sớm và ra ngoài nhớ khoác áo vô nha 😁 \nTẠM BIỆT 😁";
-const container = document.getElementById("msg-container");
-container.innerText = loiChucSinhNhat;
+
+// --- KHAI BÁO BIẾN LỜI CHÚC (Đưa lên đầu để dùng chung) ---
+    const loiChucSinhNhat = " Xin chào không biết e có đọc được tin nhắn này không nhưng mà... “ Chúc em SNVV nha , mong rằng mọi thứ với em đều thuận lợi và gặp thật nhiều may mắn nha 😁“ \nKo biết cs của e dạo này sao rồi, mong rằng mọi thứ đều tốt 😆.\nNhớ cười nhiều lên nha, ăn ít đồ cay thôi, ngủ sớm và ra ngoài nhớ khoác áo vô nha 😁 \nTẠM BIỆT 😁";
+
+    // --- HÀM 2: ĐÓNG POPUP & HIỆN THIỆP ---
+    function dongPopup() {
+        document.getElementById('popup-lixi').style.display = 'none';
+        hienThiThiep();
+    }
+
+    // --- HÀM 3: HIỆN THIỆP VÀ GÕ CHỮ ---
+    function hienThiThiep() {
+        const overlay = document.getElementById('bd-overlay');
+        const card = document.querySelector('.bd-card');
+        const msgBox = document.getElementById('bd-msg');
+
+        // Reset nội dung cũ
+        msgBox.innerHTML = ''; 
+        
+        // Ẩn nút đóng lúc đang gõ
+        const btnClose = document.getElementById('bd-close');
+        if(btnClose) btnClose.classList.remove('visible');
+
+        // Hiển thị khung nền
+        overlay.style.display = 'flex';
+        
+        // Hiệu ứng hiện khung
+        setTimeout(() => { 
+            card.classList.add('show'); 
+            // Gọi hàm gõ chữ
+            typeWriter(loiChucSinhNhat, 'bd-msg');
+        }, 100);
+    }
+
+    // --- HÀM 4: HIỆU ỨNG GÕ CHỮ (ĐÂY LÀ PHẦN BẠN BỊ THIẾU) ---
+    function typeWriter(text, elementId, speed = 50) {
+        const element = document.getElementById(elementId);
+        let i = 0;
+        element.innerHTML = ""; // Xóa sạch trước khi gõ
+        
+        function typing() {
+            if (i < text.length) {
+                // Xử lý xuống dòng
+                if (text.charAt(i) === '\n') {
+                    element.innerHTML += '<br>';
+                } else {
+                    element.innerHTML += text.charAt(i);
+                }
+                i++;
+                // Tự động cuộn xuống dưới cùng nếu văn bản dài
+                element.scrollTop = element.scrollHeight; 
+                setTimeout(typing, speed);
+            } else {
+                // Gõ xong thì hiện nút đóng
+                const btnClose = document.getElementById('bd-close');
+                if(btnClose) {
+                    btnClose.classList.add('visible');
+                    btnClose.style.opacity = 1;
+                    btnClose.style.pointerEvents = "auto";
+                }
+            }
+        }
+        typing();
+    }
+    
+    // --- HÀM 5: ĐÓNG POPUP CUỐI CÙNG ---
+    function closePopup() {
+        document.getElementById('bd-overlay').style.display = 'none';
+        // Hiện lại nút điều khiển nếu muốn
+        document.querySelector('.controls').classList.remove('hide');
+    }
+
+
+
     // Đoạn script xử lý bật tắt nhạc
     document.addEventListener('DOMContentLoaded', function() {
         const soundBtn = document.querySelector('.sound-btn');
