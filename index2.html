@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline Kỷ Niệm 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Mali', cursive;
+            background-color: #020202;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Gradient nền galaxy */
+            background: radial-gradient(circle at center, #1a0b2e 0%, #000000 100%);
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff9ad9;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
+            margin-bottom: 40px;
+            font-size: 2rem;
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* Lưới hiển thị 6 lựa chọn */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 cột trên máy tính */
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            z-index: 10;
+        }
+
+        /* Thẻ lựa chọn (Card) */
+        .memory-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 192, 203, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .memory-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #ff7eb3;
+            box-shadow: 0 0 20px rgba(255, 117, 140, 0.6);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffeaa7;
+        }
+
+        .card-desc {
+            font-size: 0.8rem;
+            color: #ddd;
+            margin-top: 5px;
+        }
+
+        /* Responsive cho điện thoại: chuyển thành 2 cột */
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Responsive cho màn hình nhỏ: 1 cột nếu cần, hoặc giữ 2 cột nhỏ */
+        @media (max-width: 480px) {
+            .grid-container {
+                gap: 15px;
+            }
+            .memory-card {
+                min-height: 120px;
+            }
+        }
+
+        /* --- Hiệu ứng rơi (Copy từ trang cũ qua cho đồng bộ) --- */
+        .vat-the-roi {
+            position: absolute;
+            top: -10%;
+            animation-name: roiTuDo;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        @keyframes roiTuDo {
+            0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { top: 110%; transform: translateX(20px) rotate(360deg); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>✨ Bộ Sưu Tập Kỷ Niệm ✨</h1>
+
+    <div class="grid-container">
+        <a href="index.html" class="memory-card">
+            <div class="card-icon">🔐</div>
+            <div class="card-title">13/02/2026</div>
+            <div class="card-desc">Ngày đặc biệt</div>
+        </a>
+
+        <a href="index2.html" class="memory-card">
+            <div class="card-icon">🎈</div>
+            <div class="card-title">Kỷ niệm 2</div>
+            <div class="card-desc">Sắp ra mắt...</div>
+        </a>
+
+        <a href="index3.html" class="memory-card" onclick="checkLink(event, 'index3.html')">
+            <div class="card-icon">🎁</div>
+            <div class="card-title">Kỷ niệm 3</div>
+            <div class="card-desc">Đang cập nhật</div>
+        </a>
+
+        <a href="index4.html" class="memory-card" onclick="checkLink(event, 'index4.html')">
+            <div class="card-icon">💌</div>
+            <div class="card-title">Kỷ niệm 4</div>
+            <div class="card-desc">Đang cập nhật</div>
+        </a>
+
+        <a href="index5.html" class="memory-card" onclick="checkLink(event, 'index5.html')">
+            <div class="card-icon">📸</div>
+            <div class="card-title">Kỷ niệm 5</div>
+            <div class="card-desc">Đang cập nhật</div>
+        </a>
+
+        <a href="index6.html" class="memory-card" onclick="checkLink(event, 'index6.html')">
+            <div class="card-icon">🎵</div>
+            <div class="card-title">Kỷ niệm 6</div>
+            <div class="card-desc">Đang cập nhật</div>
+        </a>
+    </div>
+
+    <script>
+        // Hàm kiểm tra link (Chỉ để demo, nếu chưa có file thì báo lỗi nhẹ nhàng)
+        function checkLink(e, url) {
+            // Đây là mẹo: Nếu bạn chưa tạo file index3, index4... 
+            // thì khi bấm vào trình duyệt sẽ báo lỗi 404.
+            // Đoạn này để bạn biết logic hoạt động thôi nhé.
+            // Nếu muốn chặn click khi chưa có file thì uncomment dòng dưới:
+            /*
+            e.preventDefault();
+            alert("Tính năng này đang được xây dựng! Quay lại sau nhé ^^");
+            */
+        }
+
+        // --- Tạo hiệu ứng rơi rơi ---
+        function taoVatTheRoi() {
+            const icons = ['✨', '🌟', '💖', '🌸', '🍂'];
+            const icon = document.createElement('div');
+            icon.innerText = icons[Math.floor(Math.random() * icons.length)];
+            icon.classList.add('vat-the-roi');
+            icon.style.left = Math.random() * 100 + 'vw';
+            const size = Math.random() * 15 + 10; 
+            icon.style.fontSize = size + 'px';
+            const duration = Math.random() * 3 + 4;
+            icon.style.animationDuration = duration + 's';
+            document.body.appendChild(icon);
+            setTimeout(() => { icon.remove(); }, duration * 1000);
+        }
+        setInterval(taoVatTheRoi, 600);
+    </script>
+
+</body>
+</html>
