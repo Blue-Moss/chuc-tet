@@ -20,7 +20,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* Gradient nền galaxy */
             background: radial-gradient(circle at center, #1a0b2e 0%, #000000 100%);
             overflow-x: hidden;
             padding: 20px;
@@ -30,88 +29,106 @@
             color: #ff9ad9;
             text-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
             margin-bottom: 40px;
-            font-size: 2rem;
+            font-size: 2.2rem;
             text-align: center;
             z-index: 10;
         }
 
-        /* Lưới hiển thị 6 lựa chọn */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 cột trên máy tính */
-            gap: 20px;
+        /* --- MẶC ĐỊNH: GIAO DIỆN MÁY TÍNH (FLEXBOX) --- */
+        .container-box {
+            display: flex;
+            flex-wrap: wrap; /* Tự xuống dòng khi hết chỗ */
+            justify-content: center;
+            gap: 25px;
             width: 100%;
-            max-width: 800px;
+            max-width: 1200px;
             z-index: 10;
         }
 
-        /* Thẻ lựa chọn (Card) */
         .memory-card {
+            /* Kích thước chuẩn trên máy tính */
+            width: 240px; 
+            height: 200px;
+            
             background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 192, 203, 0.3);
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 20px;
-            text-align: center;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 150px;
+            
+            text-decoration: none;
+            color: white;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
         }
 
         .memory-card:hover {
-            transform: translateY(-5px) scale(1.03);
+            transform: translateY(-10px) scale(1.05);
             background: rgba(255, 255, 255, 0.15);
             border-color: #ff7eb3;
-            box-shadow: 0 0 20px rgba(255, 117, 140, 0.6);
+            box-shadow: 0 10px 30px rgba(255, 117, 140, 0.4);
         }
 
         .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+        
+        .memory-card:hover .card-icon {
+            transform: scale(1.2) rotate(10deg);
         }
 
         .card-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: #ffeaa7;
+            margin-bottom: 5px;
+            text-align: center;
         }
 
         .card-desc {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #ddd;
-            margin-top: 5px;
+            text-align: center;
+            line-height: 1.4;
         }
 
-        /* Responsive cho điện thoại: chuyển thành 2 cột */
+        /* --- GIAO DIỆN ĐIỆN THOẠI (DƯỚI 768px) --- */
+        /* Đây là chỗ phép thuật xảy ra: Chuyển từ Flex sang Grid 2 cột */
         @media (max-width: 768px) {
-            .grid-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            h1 {
-                font-size: 1.5rem;
-            }
-        }
+            
+            h1 { font-size: 1.8rem; margin-bottom: 25px; }
 
-        /* Responsive cho màn hình nhỏ: 1 cột nếu cần, hoặc giữ 2 cột nhỏ */
-        @media (max-width: 480px) {
-            .grid-container {
-                gap: 15px;
+            .container-box {
+                display: grid; /* Chuyển sang Grid */
+                grid-template-columns: 1fr 1fr; /* Chia cứng 2 cột bằng nhau */
+                gap: 15px; /* Khoảng cách nhỏ hơn chút cho gọn */
+                padding: 0 10px; /* Thêm chút lề 2 bên màn hình */
             }
+
             .memory-card {
-                min-height: 120px;
+                width: 100%; /* Thẻ sẽ tự co giãn theo ô grid */
+                height: auto; /* Chiều cao tự động theo nội dung */
+                min-height: 160px; /* Nhưng không thấp quá */
+                padding: 15px 10px; /* Giảm padding để chữ không bị ép */
             }
+
+            /* Thu nhỏ chữ và icon một xíu cho cân đối với thẻ nhỏ */
+            .card-icon { font-size: 2.2rem; margin-bottom: 10px; }
+            .card-title { font-size: 1rem; }
+            .card-desc { font-size: 0.75rem; line-height: 1.3; }
         }
 
-        /* --- Hiệu ứng rơi (Copy từ trang cũ qua cho đồng bộ) --- */
+        /* --- Hiệu ứng rơi (Giữ nguyên) --- */
         .vat-the-roi {
             position: absolute;
             top: -10%;
@@ -135,68 +152,54 @@
 
     <h1>✨ Bộ Sưu Tập Kỷ Niệm ✨</h1>
 
-    <div class="grid-container">
+    <div class="container-box">
+        
         <a href="index.html" class="memory-card">
             <div class="card-icon">🔐</div>
-            <div class="card-title">13/02/2026</div>
-            <div class="card-desc">Ngày đặc biệt</div>
-        </a>
-
-        <a href="index2.html" class="memory-card">
-            <div class="card-icon">🎈</div>
-            <div class="card-title">Kỷ niệm 2</div>
-            <div class="card-desc">Sắp ra mắt...</div>
-        </a>
-
-        <a href="index3.html" class="memory-card" onclick="checkLink(event, 'index3.html')">
-            <div class="card-icon">🎁</div>
-            <div class="card-title">Kỷ niệm 3</div>
-            <div class="card-desc">Đang cập nhật</div>
-        </a>
-
-        <a href="index4.html" class="memory-card" onclick="checkLink(event, 'index4.html')">
-            <div class="card-icon">💌</div>
-            <div class="card-title">Kỷ niệm 4</div>
-            <div class="card-desc">Đang cập nhật</div>
-        </a>
-
-        <a href="index5.html" class="memory-card" onclick="checkLink(event, 'index5.html')">
-            <div class="card-icon">📸</div>
-            <div class="card-title">Kỷ niệm 5</div>
-            <div class="card-desc">Đang cập nhật</div>
+            <div class="card-title">Secret Gate</div>
+            <div class="card-desc">Cánh cổng bí mật 02/06</div>
         </a>
 
         <a href="note.html" class="memory-card">
-    <div class="card-icon">📝</div>
-    <div class="card-title">Gửi Note</div>
-    <div class="card-desc">Nếu có gì muốn nói có thể dùng cái này nhé</div>
-</a>
+            <div class="card-icon">💌</div>
+            <div class="card-title">Gửi Lời Nhắn</div>
+            <div class="card-desc">Tâm sự gửi vũ trụ</div>
+        </a>
+
+        <a href="note.html" class="memory-card">
+            <div class="card-icon">📸</div>
+            <div class="card-title">Kho Ảnh</div>
+            <div class="card-desc">Lưu giữ khoảnh khắc</div>
+        </a>
+
+        <a href="note.html" class="memory-card">
+            <div class="card-icon">🎁</div>
+            <div class="card-title">Bất Ngờ</div>
+            <div class="card-desc">Một món quà nhỏ</div>
+        </a>
+
+        <a href="note.html" class="memory-card">
+            <div class="card-icon">🎶</div>
+            <div class="card-title">Music</div>
+            <div class="card-desc">Giai điệu yêu thương</div>
+        </a>
+
     </div>
 
     <script>
-        // Hàm kiểm tra link (Chỉ để demo, nếu chưa có file thì báo lỗi nhẹ nhàng)
-        function checkLink(e, url) {
-            // Đây là mẹo: Nếu bạn chưa tạo file index3, index4... 
-            // thì khi bấm vào trình duyệt sẽ báo lỗi 404.
-            // Đoạn này để bạn biết logic hoạt động thôi nhé.
-            // Nếu muốn chặn click khi chưa có file thì uncomment dòng dưới:
-            /*
-            e.preventDefault();
-            alert("Tính năng này đang được xây dựng! Quay lại sau nhé ^^");
-            */
-        }
-
-        // --- Tạo hiệu ứng rơi rơi ---
         function taoVatTheRoi() {
-            const icons = ['✨', '🌟', '💖', '🌸', '🍂'];
+            const icons = ['✨', '🌟', '💖', '🌸', '🍂', '💫'];
             const icon = document.createElement('div');
             icon.innerText = icons[Math.floor(Math.random() * icons.length)];
             icon.classList.add('vat-the-roi');
             icon.style.left = Math.random() * 100 + 'vw';
+            
             const size = Math.random() * 15 + 10; 
             icon.style.fontSize = size + 'px';
+            
             const duration = Math.random() * 3 + 4;
             icon.style.animationDuration = duration + 's';
+            
             document.body.appendChild(icon);
             setTimeout(() => { icon.remove(); }, duration * 1000);
         }

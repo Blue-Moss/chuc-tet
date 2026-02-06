@@ -3,241 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret Gate 🔒</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Mystery Gate 🌌</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Mali', cursive;
-            background-color: #020202;
+            font-family: 'Quicksand', sans-serif;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
             position: relative;
-            /* Tạo background gradient nhẹ giống bầu trời đêm */
-            background: radial-gradient(circle at center, #1a0b2e 0%, #000000 100%);
+            /* Background chuyển động màu vũ trụ */
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a0b2e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
         }
 
-        /* Hiệu ứng vật thể rơi (đồng bộ với trang index) */
-        .vat-the-roi {
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Hiệu ứng đom đóm/sao bay lên */
+        .firefly {
             position: absolute;
-            top: -10%;
-            animation-name: roiTuDo;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-            z-index: 1;
+            bottom: -10%;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fff, 0 0 20px #ff00de;
+            opacity: 0;
+            animation: flyUp linear infinite;
             pointer-events: none;
-            opacity: 0.7;
         }
 
-        @keyframes roiTuDo {
-            0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            100% { top: 110%; transform: translateX(20px) rotate(360deg); opacity: 0; }
+        @keyframes flyUp {
+            0% { bottom: -10%; transform: translateX(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 0.8; }
+            100% { bottom: 110%; transform: translateX(-50px); opacity: 0; }
         }
 
-        /* Hộp nhập mật khẩu */
+        /* Card nhập liệu kính mờ */
         .login-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(255, 117, 140, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 3rem 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            border-left: 1px solid rgba(255, 255, 255, 0.5);
             width: 90%;
-            max-width: 400px;
+            max-width: 420px;
+            text-align: center;
             z-index: 10;
             position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .login-card:hover {
+            transform: translateY(-5px);
         }
 
         .login-card h2 {
-            color: #ff758c;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-            text-shadow: 0 0 10px rgba(255, 117, 140, 0.8);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            /* Chữ gradient */
+            background: linear-gradient(to right, #fff, #b9a3e3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
         }
 
         .login-card p {
-            color: #fff;
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            font-weight: 300;
         }
 
-        input[type="password"], input[type="text"] {
+        /* Input đẹp hơn */
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        input {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 2px solid #ff7eb3;
-            background: rgba(0, 0, 0, 0.5);
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50px;
             color: #fff;
-            font-family: 'Mali', cursive;
+            font-family: 'Quicksand', sans-serif;
             font-size: 1.1rem;
             outline: none;
             text-align: center;
+            letter-spacing: 3px;
             transition: 0.3s;
-            margin-bottom: 1rem;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
         }
+
+        input::placeholder { color: rgba(255,255,255,0.4); letter-spacing: 1px; }
 
         input:focus {
-            box-shadow: 0 0 15px rgba(255, 126, 179, 0.6);
-            border-color: #ff758c;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(185, 163, 227, 0.5);
         }
 
+        /* Nút bấm Neon */
         button {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             border: none;
             border-radius: 50px;
-            background: linear-gradient(to right, #ff758c, #ff7eb3);
-            color: white;
-            font-size: 1.2rem;
-            font-family: 'Mali', cursive;
+            background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+            background-size: 300%;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.5s;
+            font-family: 'Quicksand', sans-serif;
         }
 
         button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 117, 140, 0.8);
+            background-position: right center;
+            box-shadow: 0 0 20px #f441a5;
+            transform: scale(1.02);
         }
 
-        button:active {
-            transform: scale(0.95);
-        }
-
-        /* Khu vực hiển thị thông báo/gợi ý */
+        /* Thông báo */
         #message {
-            margin-top: 15px;
-            min-height: 20px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            margin-top: 20px;
+            min-height: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
         }
+        
+        .hint-text { color: #f4e04d; font-size: 0.85rem; display: block; margin-top: 5px; }
+        .success-text { color: #00ff88; text-shadow: 0 0 10px #00ff88; }
+        .error-text { color: #ff4757; }
 
-        .error-msg {
-            color: #ff4757;
-            animation: shake 0.5s;
-        }
-
-        .success-msg {
-            color: #2ed573;
-        }
-
-        .hint-text {
-            color: #ffa502;
-        }
-
-        /* Hiệu ứng rung khi nhập sai */
         @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            50% { transform: translateX(10px); }
-            75% { transform: translateX(-10px); }
-            100% { transform: translateX(0); }
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
+        
+        .shake-anim { animation: shake 0.4s; }
 
     </style>
 </head>
 <body>
 
-    <div id="background-effect"></div>
+    <div id="stars-container"></div>
 
     <div class="login-card">
-        <h2>Secret Zone 🎂</h2>
-        <p>Nhập mật khẩu thần thánh để mở quà nhé!</p>
+        <h2>LOCKED</h2>
+        <p>Vùng bí mật. Vui lòng xác minh danh tính.</p>
         
-        <input type="password" id="passInput" placeholder="Nhập mật khẩu..." autocomplete="off">
-        <button onclick="checkPass()">Mở quà ngay</button>
+        <div class="input-group">
+            <input type="password" id="passInput" placeholder="● ● ● ●" autocomplete="off">
+        </div>
+        
+        <button onclick="checkPass()">Mở Khóa</button>
         
         <div id="message"></div>
     </div>
 
     <script>
         // --- CẤU HÌNH ---
-        const PASSWORD = "0206"; // Mật khẩu cố định
-        const TARGET_PAGE = "index2.html"; // Trang đích
-        let attemptCount = 0; // Đếm số lần nhập sai
+        const CONFIG = {
+            password: "0206",
+            nextPage: "index2.html",
+            hints: [
+                "Gợi ý: Ngày sinh nhật của ai đó? 🎂",
+                "Gợi ý: 4 con số định mệnh (ddmm) ✨"
+            ]
+        };
 
-        const inputField = document.getElementById('passInput');
-        const msgDiv = document.getElementById('message');
+        let attempts = 0;
+        const input = document.getElementById('passInput');
+        const msg = document.getElementById('message');
+        const card = document.querySelector('.login-card');
 
-        // Hàm kiểm tra mật khẩu
         function checkPass() {
-            const userPass = inputField.value;
-
-            if (userPass === PASSWORD) {
-                // ĐÚNG MẬT KHẨU
-                msgDiv.className = "success-msg";
-                msgDiv.innerHTML = "Chính xác! Đang chuyển hướng... 🚀";
-                inputField.style.borderColor = "#2ed573";
+            const val = input.value;
+            
+            if (val === CONFIG.password) {
+                // ĐÚNG
+                msg.className = "success-text";
+                msg.innerHTML = "ACCESS GRANTED 🔓<br>Đang dịch chuyển tức thời...";
+                input.style.borderColor = "#00ff88";
                 
-                // Chờ 1.5s rồi chuyển trang
                 setTimeout(() => {
-                    window.location.href = TARGET_PAGE;
+                    window.location.href = CONFIG.nextPage;
                 }, 1500);
-
             } else {
-                // SAI MẬT KHẨU
-                attemptCount++;
-                inputField.value = ""; // Xóa ô nhập
-                inputField.focus();
-                msgDiv.className = "error-msg"; // Kích hoạt hiệu ứng rung
+                // SAI
+                attempts++;
+                input.value = "";
+                input.focus();
+                
+                // Hiệu ứng rung
+                card.classList.add('shake-anim');
+                setTimeout(() => card.classList.remove('shake-anim'), 400);
 
-                // Logic hiển thị gợi ý
-                if (attemptCount === 1) {
-                    msgDiv.innerHTML = "❌ Sai rồi! <br><span class='hint-text'>Gợi ý 1: Ngày sinh của 1 người đẹp trai 😎</span>";
-                } else if (attemptCount === 2) {
-                    msgDiv.innerHTML = "❌ Vẫn sai kìa! <br><span class='hint-text'>Gợi ý 2: Viết liền ngày + tháng (ddmm)</span>";
-                } else if (attemptCount >= 3) {
-                    msgDiv.innerHTML = "😂 Thôi được rồi, mật khẩu là: <b>0206</b>";
-                    inputField.value = "0206"; // Tự điền luôn cho người dùng
+                msg.className = "error-text";
+                
+                if (attempts === 1) {
+                    msg.innerHTML = "Mật khẩu không đúng.";
+                } else if (attempts === 2) {
+                    msg.innerHTML = CONFIG.hints[0];
+                } else if (attempts === 3) {
+                    msg.innerHTML = CONFIG.hints[1];
+                } else {
+                    msg.innerHTML = `Thôi được rồi, pass là: <b>${CONFIG.password}</b>`;
+                    input.value = CONFIG.password;
                 }
-
-                // Reset class rung để lần sau có thể rung tiếp
-                setTimeout(() => {
-                    msgDiv.classList.remove("error-msg");
-                }, 500);
             }
         }
 
-        // Sự kiện nhấn Enter
-        inputField.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                checkPass();
-            }
+        // Enter để submit
+        input.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") checkPass();
         });
 
-        // --- HIỆU ỨNG VẬT THỂ RƠI (Giống trang chính) ---
-        function taoVatTheRoi() {
-            const icons = ['✨', '🎈', '🔒', '🔑', '💖'];
-            const icon = document.createElement('div');
-            icon.innerText = icons[Math.floor(Math.random() * icons.length)];
-            icon.classList.add('vat-the-roi');
-            icon.style.left = Math.random() * 100 + 'vw';
+        // --- HIỆU ỨNG BỤI SAO/ĐOM ĐÓM ---
+        function createFirefly() {
+            const star = document.createElement('div');
+            star.classList.add('firefly');
             
-            const size = Math.random() * 20 + 10; // Kích thước ngẫu nhiên
-            icon.style.fontSize = size + 'px';
+            // Random vị trí và kích thước
+            const size = Math.random() * 6 + 2; // 2px - 8px
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + 'vw';
             
-            const duration = Math.random() * 3 + 4; // Tốc độ rơi
-            icon.style.animationDuration = duration + 's';
-            
-            document.body.appendChild(icon);
+            // Random màu sắc lung linh (Trắng, Xanh lơ, Tím hồng)
+            const colors = ['#ffffff', '#00f2ff', '#bd00ff'];
+            star.style.background = colors[Math.floor(Math.random() * colors.length)];
+            star.style.boxShadow = `0 0 ${size * 2}px ${star.style.background}`;
 
-            // Xóa phần tử sau khi rơi xong
-            setTimeout(() => { icon.remove(); }, duration * 1000);
+            // Random tốc độ bay
+            const duration = Math.random() * 5 + 5; // 5s - 10s
+            star.style.animationDuration = duration + 's';
+
+            document.body.appendChild(star);
+
+            // Xóa sau khi bay xong
+            setTimeout(() => { star.remove(); }, duration * 1000);
         }
-        
-        // Tạo mưa icon
-        setInterval(taoVatTheRoi, 500);
+
+        // Tạo nhiều sao lúc đầu
+        for(let i=0; i<15; i++) setTimeout(createFirefly, i * 300);
+        // Duy trì tạo sao mới
+        setInterval(createFirefly, 400);
 
     </script>
 </body>
