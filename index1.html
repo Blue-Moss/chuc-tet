@@ -1,469 +1,244 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<title>Trình mô phỏng pháo hoa</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<meta name="mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="theme-color" content="#000000" />
-		<link rel="shortcut icon" type="image/png" href="./images/favicon.png" />
-		<link rel="icon" type="image/png" href="./images/favicon.png" />
-		<link rel="apple-touch-icon-precomposed" href="./images/favicon.png" />
-		<!-- Thư viện CSS Clip Path Helper -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clippy.js/1.0.0/clippy.min.css" />
-		<style>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Gate 🔒</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-			/* Fallback mask cho trình duyệt cũ */
-			@supports not (clip-path: path("M 120 224 C 8 144 0 72 60 40 C 96 24 120 40 120 56 C 120 40 144 24 180 40 C 240 72 232 144 120 224 Z")) {
-				.shape-heart img {
-					mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><path d="M120 224 C8 144 0 72 60 40 C96 24 120 40 120 56 C120 40 144 24 180 40 C240 72 232 144 120 224 Z" fill="white"/></svg>');
-					-webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><path d="M120 224 C8 144 0 72 60 40 C96 24 120 40 120 56 C120 40 144 24 180 40 C240 72 232 144 120 224 Z" fill="white"/></svg>');
-					mask-size: contain;
-					-webkit-mask-size: contain;
-					mask-repeat: no-repeat;
-					-webkit-mask-repeat: no-repeat;
-				}
-			}
+        body {
+            font-family: 'Mali', cursive;
+            background-color: #020202;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            /* Tạo background gradient nhẹ giống bầu trời đêm */
+            background: radial-gradient(circle at center, #1a0b2e 0%, #000000 100%);
+        }
 
-			/* Layer chứa lời chúc bay trên nền pháo hoa */
-			.wishes-layer {
-				position: absolute;
-				inset: 0;
-				z-index: 10; /* Hiển thị trên canvas */
-				pointer-events: none; /* không chặn click vào canvas / nút điều khiển */
-				transform-origin: center center;
-				transform-style: preserve-3d; /* Cho phép 3D transform */
-				will-change: transform; /* Tối ưu performance */
-			}
+        /* Hiệu ứng vật thể rơi (đồng bộ với trang index) */
+        .vat-the-roi {
+            position: absolute;
+            top: -10%;
+            animation-name: roiTuDo;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.7;
+        }
 
-			/* Tắt transition khi đang drag để giảm lag */
-			.wishes-layer.dragging {
-				transition: none;
-			}
+        @keyframes roiTuDo {
+            0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { top: 110%; transform: translateX(20px) rotate(360deg); opacity: 0; }
+        }
 
-			/* Wrapper anim bay lên (dùng transform riêng) */
-			.wish-wrapper {
-				position: absolute;
-				bottom: -3rem;
-				left: 50%;
-				transform: translateX(-50%) translateY(0);
-				opacity: 0;
-				pointer-events: none; /* bản thân wrapper không nhận sự kiện */
-			}
+        /* Hộp nhập mật khẩu */
+        .login-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(255, 117, 140, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            z-index: 10;
+            position: relative;
+        }
 
-			/* Câu chúc màu hồng phát sáng, có thể xoay / thu phóng bằng tay */
-			.wish-text {
-				display: inline-block;
-				font-size: 1.1rem;
-				padding: 0.4rem 1rem;
-				border-radius: 999px;
-				color: #ff9ad9;
-				text-shadow:
-					0 0 6px rgba(255, 105, 180, 0.9),
-					0 0 18px rgba(255, 20, 147, 0.8);
-				background: rgba(0, 0, 0, 0.3);
-				border: 1px solid rgba(255, 192, 203, 0.7);
-				box-shadow:
-					0 0 14px rgba(255, 105, 180, 0.7),
-					0 0 32px rgba(255, 20, 147, 0.4);
-				white-space: nowrap;
-				transform-origin: center center;
-				pointer-events: auto; /* cho phép chạm/drag để xoay, scale */
-			}
+        .login-card h2 {
+            color: #ff758c;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(255, 117, 140, 0.8);
+        }
 
-			/* Responsive cho mobile */
-			@media (max-width: 768px) {
-				.wish-text {
-					font-size: 0.9rem; /* Tăng font-size một chút để đọc tốt hơn */
-					padding: 0.35rem 1rem; /* Tăng padding để có không gian hơn */
-					max-width: 92vw; /* Tăng max-width để hiển thị nhiều chữ hơn */
-					min-width: 200px; /* Đảm bảo chiều rộng tối thiểu */
-					white-space: normal; /* Cho phép xuống dòng trên mobile */
-					word-wrap: break-word;
-					word-break: break-word; /* Ngắt từ tốt hơn */
-					display: -webkit-box;
-					-webkit-line-clamp: 2; /* Giới hạn tối đa 2 dòng */
-					line-clamp: 2; /* Thuộc tính chuẩn */
-					-webkit-box-orient: vertical;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					line-height: 1.5; /* Tăng line-height để đọc tốt hơn */
-				}
-			}
+        .login-card p {
+            color: #fff;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
 
-			@media (max-width: 480px) {
-				.wish-text {
-					font-size: 0.8rem;
-					padding: 0.3rem 0.85rem;
-					max-width: 94vw; /* Tăng max-width trên mobile nhỏ */
-					min-width: 180px; /* Chiều rộng tối thiểu */
-					-webkit-line-clamp: 2; /* Vẫn giới hạn 2 dòng trên mobile nhỏ */
-					line-clamp: 2; /* Thuộc tính chuẩn */
-					line-height: 1.4;
-				}
-			}
+        input[type="password"], input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #ff7eb3;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-family: 'Mali', cursive;
+            font-size: 1.1rem;
+            outline: none;
+            text-align: center;
+            transition: 0.3s;
+            margin-bottom: 1rem;
+        }
 
-			/* Bay chậm đều từ dưới lên trên */
-			@keyframes wishFloatUp {
-				0% {
-					opacity: 0;
-					transform: translateX(-50%) translateY(10vh);
-				}
-				15% {
-					opacity: 1;
-				}
-				100% {
-					opacity: 0;
-					transform: translateX(-50%) translateY(-110vh);
-				}
-			}
+        input:focus {
+            box-shadow: 0 0 15px rgba(255, 126, 179, 0.6);
+            border-color: #ff758c;
+        }
 
-			.wish-animate {
-				animation: wishFloatUp 7s linear forwards;
-			}
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(to right, #ff758c, #ff7eb3);
+            color: white;
+            font-size: 1.2rem;
+            font-family: 'Mali', cursive;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+        }
 
-			/* Ảnh bay lên cùng câu chúc */
-			.wish-image {
-				display: inline-block;
-				width: 120px;
-				height: 120px;
-				object-fit: cover;
-				border-radius: 12px;
-				border: 3px solid rgba(255, 192, 203, 0.9);
-				box-shadow:
-					0 0 20px rgba(255, 105, 180, 0.8),
-					0 0 40px rgba(255, 20, 147, 0.6),
-					0 0 60px rgba(255, 20, 147, 0.4),
-					inset 0 0 20px rgba(255, 192, 203, 0.3);
-				transform-origin: center center;
-				pointer-events: auto;
-				animation: imageGlow 2s ease-in-out infinite alternate;
-			}
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 117, 140, 0.8);
+        }
 
-			/* Responsive ảnh bay lên cho mobile */
-			@media (max-width: 768px) {
-				.wish-image {
-					width: 80px;
-					height: 80px;
-					border-width: 2px;
-					border-radius: 8px;
-				}
-			}
+        button:active {
+            transform: scale(0.95);
+        }
 
-			@media (max-width: 480px) {
-				.wish-image {
-					width: 60px;
-					height: 60px;
-					border-width: 2px;
-					border-radius: 6px;
-				}
-			}
+        /* Khu vực hiển thị thông báo/gợi ý */
+        #message {
+            margin-top: 15px;
+            min-height: 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
 
-			/* Hiệu ứng phát sáng cho ảnh */
-			@keyframes imageGlow {
-				0% {
-					box-shadow:
-						0 0 20px rgba(255, 105, 180, 0.8),
-						0 0 40px rgba(255, 20, 147, 0.6),
-						0 0 60px rgba(255, 20, 147, 0.4),
-						inset 0 0 20px rgba(255, 192, 203, 0.3);
-					border-color: rgba(255, 192, 203, 0.9);
-				}
-				100% {
-					box-shadow:
-						0 0 30px rgba(255, 105, 180, 1),
-						0 0 60px rgba(255, 20, 147, 0.9),
-						0 0 90px rgba(255, 20, 147, 0.7),
-						inset 0 0 30px rgba(255, 192, 203, 0.5);
-					border-color: rgba(255, 255, 255, 1);
-				}
-			}
+        .error-msg {
+            color: #ff4757;
+            animation: shake 0.5s;
+        }
 
-			/* Wrapper cho ảnh */
-			.wish-image-wrapper {
-				position: absolute;
-				bottom: -3rem;
-				left: 50%;
-				transform: translateX(-50%) translateY(0);
-				opacity: 0;
-				pointer-events: none;
-			}
+        .success-msg {
+            color: #2ed573;
+        }
 
-			/* Ẩn nút pause và nút cài đặt */
-			.pause-btn,
-			.settings-btn {
-				display: none !important;
-			}
-		</style>
-		<meta name="msapplication-TileColor" content="#000000" />
-		<meta name="msapplication-TileImage" content="./images/favicon.png" />
-		<link href="./fonts/css.css" rel="stylesheet" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet" />
-		<link rel="stylesheet" href="./css/style.css" />
-	</head>
-	<body>
-		<!-- partial:index.partial.html -->
-		<!-- SVG Spritesheet -->
-		<div style="height: 0; width: 0; position: absolute; visibility: hidden">
-			<svg xmlns="http://www.w3.org/2000/svg">
-				<symbol id="icon-play" viewBox="0 0 24 24">
-					<path d="M8 5v14l11-7z" />
-				</symbol>
-				<symbol id="icon-pause" viewBox="0 0 24 24">
-					<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-				</symbol>
-				<symbol id="icon-close" viewBox="0 0 24 24">
-					<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-				</symbol>
-				<symbol id="icon-settings" viewBox="0 0 24 24">
-					<path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
-				</symbol>
-				<symbol id="icon-sound-on" viewBox="0 0 24 24">
-					<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-				</symbol>
-				<symbol id="icon-sound-off" viewBox="0 0 24 24">
-					<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
-				</symbol>
-				<symbol id="icon-stop-wishes" viewBox="0 0 24 24">
-					<path d="M6 6h12v12H6z" />
-				</symbol>
-			</svg>
-		</div>
-		<!-- App -->
-		<div class="container">
-			<div class="stage-container remove">
-				<!-- Layer lời chúc bay trên trời -->
-				<div class="wishes-layer" id="wishes-layer"></div>
-				<div class="canvas-container">
-					<canvas id="trails-canvas"> </canvas>
-					<canvas id="main-canvas"> </canvas>
-				</div>
-				<div class="controls">
-					<div class="btn pause-btn">
-						<svg fill="white" width="24" height="24">
-							<use href="#icon-pause" xlink:href="#icon-pause"></use>
-						</svg>
-					</div>
-					<div class="btn sound-btn">
-						<svg fill="white" width="24" height="24">
-							<use href="#icon-sound-off" xlink:href="#icon-sound-off"></use>
-						</svg>
-					</div>
-					<div class="btn stop-wishes-btn">
-						<svg fill="white" width="24" height="24">
-							<use href="#icon-stop-wishes" xlink:href="#icon-stop-wishes"></use>
-						</svg>
-					</div>
-					<div class="btn settings-btn">
-						<svg fill="white" width="24" height="24">
-							<use href="#icon-settings" xlink:href="#icon-settings"></use>
-						</svg>
-					</div>
-				</div>
-				<div class="menu hide">
-					<div class="menu__inner-wrap">
-						<div class="btn btn--bright close-menu-btn">
-							<svg fill="white" width="24" height="24">
-								<use href="#icon-close" xlink:href="#icon-close"></use>
-							</svg>
-						</div>
-						<div class="menu__header">Cài đặt</div>
-						<div class="menu__subheader">Để biết thêm thông tin hãy nhấp vào bất kỳ nhãn nào</div>
-						<form>
-							<div class="form-option form-option--select">
-								<label class="shell-type-label"> Loại pháo hoa </label>
-								<select class="shell-type"></select>
-							</div>
-							<div class="form-option form-option--select">
-								<label class="shell-size-label"> Kích thước pháo hoa </label>
-								<select class="shell-size"></select>
-							</div>
-							<div class="form-option form-option--select">
-								<label class="quality-ui-label"> Chất lượng hiển thị </label>
-								<select class="quality-ui"></select>
-							</div>
-							<div class="form-option form-option--select">
-								<label class="sky-lighting-label"> Độ sáng bầu trời </label>
-								<select class="sky-lighting"></select>
-							</div>
-							<div class="form-option form-option--select">
-								<label class="scaleFactor-label"> Thu phóng </label>
-								<select class="scaleFactor"></select>
-							</div>
-							<div class="form-option form-option--checkbox">
-								<label class="word-shell-label"> Pháo hoa chữ </label>
-								<input class="word-shell" type="checkbox" />
-							</div>
-							<div class="form-option form-option--checkbox">
-								<label class="auto-launch-label"> Tự động bắn pháo </label>
-								<input class="auto-launch" type="checkbox" />
-							</div>
-							<div class="form-option form-option--checkbox form-option--finale-mode">
-								<label class="finale-mode-label"> Bắn nhiều pháo hoa cùng lúc </label>
-								<input class="finale-mode" type="checkbox" />
-							</div>
-							<div class="form-option form-option--checkbox">
-								<label class="hide-controls-label"> Ẩn nút điều khiển </label>
-								<input class="hide-controls" type="checkbox" />
-							</div>
-							<div class="form-option form-option--checkbox form-option--fullscreen">
-								<label class="fullscreen-label"> Toàn màn hình </label>
-								<input class="fullscreen" type="checkbox" />
-							</div>
-							<div class="form-option form-option--checkbox">
-								<label class="long-exposure-label"> Giữ vệt sáng pháo hoa </label>
-								<input class="long-exposure" type="checkbox" />
-							</div>
-						</form>
-						<div class="credits">
-							<p class="copyright">
-								<script>
-									var mydate = new Date();
-									document.writeln("Copyright&nbsp;&copy;&nbsp;2021 - " + mydate.getFullYear() + '&nbsp;<a target="_blank" href="https://www.nianbroken.top/">碎念_Nian</a><br />All&nbsp;Rights&nbsp;Reserved');
-								</script>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="help-modal">
-				<div class="help-modal__overlay"></div>
-				<div class="help-modal__dialog">
-					<div class="help-modal__header"></div>
-					<div class="help-modal__body"></div>
-					<button type="button" class="help-modal__close-btn">Đóng</button>
-				</div>
-			</div>
-		</div>
+        .hint-text {
+            color: #ffa502;
+        }
 
-		<!-- partial -->
-		<script src="./js/fscreen.js"></script>
-		<script src="./js/Stage.js"></script>
-		<script src="./js/MyMath.js"></script>
-		<script src="./js/script.js"></script>
-	<audio id="audio-player" loop>
-    <source src="./audio/Rain.mp3" type="audio/mp3">
-</audio>
+        /* Hiệu ứng rung khi nhập sai */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
 
-<script>
-    // Đoạn script xử lý bật tắt nhạc
-    document.addEventListener('DOMContentLoaded', function() {
-        const soundBtn = document.querySelector('.sound-btn');
-        const audio = document.getElementById('audio-player');
-        const iconUse = soundBtn.querySelector('use');
+    </style>
+</head>
+<body>
+
+    <div id="background-effect"></div>
+
+    <div class="login-card">
+        <h2>Secret Zone 🎂</h2>
+        <p>Nhập mật khẩu thần thánh để mở quà nhé!</p>
         
-        // Mặc định trình duyệt chặn tự phát nhạc, nên ta cần bắt sự kiện click đầu tiên
-        let isPlaying = false;
+        <input type="password" id="passInput" placeholder="Nhập mật khẩu..." autocomplete="off">
+        <button onclick="checkPass()">Mở quà ngay</button>
+        
+        <div id="message"></div>
+    </div>
 
-        soundBtn.addEventListener('click', function() {
-            if (isPlaying) {
-                audio.pause();
-                // Đổi icon thành tắt tiếng
-                iconUse.setAttribute('href', '#icon-sound-off');
-                iconUse.setAttribute('xlink:href', '#icon-sound-off');
-                isPlaying = false;
+    <script>
+        // --- CẤU HÌNH ---
+        const PASSWORD = "0206"; // Mật khẩu cố định
+        const TARGET_PAGE = "index.html"; // Trang đích
+        let attemptCount = 0; // Đếm số lần nhập sai
+
+        const inputField = document.getElementById('passInput');
+        const msgDiv = document.getElementById('message');
+
+        // Hàm kiểm tra mật khẩu
+        function checkPass() {
+            const userPass = inputField.value;
+
+            if (userPass === PASSWORD) {
+                // ĐÚNG MẬT KHẨU
+                msgDiv.className = "success-msg";
+                msgDiv.innerHTML = "Chính xác! Đang chuyển hướng... 🚀";
+                inputField.style.borderColor = "#2ed573";
+                
+                // Chờ 1.5s rồi chuyển trang
+                setTimeout(() => {
+                    window.location.href = TARGET_PAGE;
+                }, 1500);
+
             } else {
-                audio.play().then(() => {
-                    // Đổi icon thành bật tiếng
-                    iconUse.setAttribute('href', '#icon-sound-on');
-                    iconUse.setAttribute('xlink:href', '#icon-sound-on');
-                    isPlaying = true;
-                }).catch(error => {
-                    console.log("Trình duyệt chặn phát nhạc: ", error);
-                });
+                // SAI MẬT KHẨU
+                attemptCount++;
+                inputField.value = ""; // Xóa ô nhập
+                inputField.focus();
+                msgDiv.className = "error-msg"; // Kích hoạt hiệu ứng rung
+
+                // Logic hiển thị gợi ý
+                if (attemptCount === 1) {
+                    msgDiv.innerHTML = "❌ Sai rồi! <br><span class='hint-text'>Gợi ý 1: Ngày sinh của 1 người đẹp trai 😎</span>";
+                } else if (attemptCount === 2) {
+                    msgDiv.innerHTML = "❌ Vẫn sai kìa! <br><span class='hint-text'>Gợi ý 2: Viết liền ngày + tháng (ddmm)</span>";
+                } else if (attemptCount >= 3) {
+                    msgDiv.innerHTML = "😂 Thôi được rồi, mật khẩu là: <b>0206</b>";
+                    inputField.value = "0206"; // Tự điền luôn cho người dùng
+                }
+
+                // Reset class rung để lần sau có thể rung tiếp
+                setTimeout(() => {
+                    msgDiv.classList.remove("error-msg");
+                }, 500);
+            }
+        }
+
+        // Sự kiện nhấn Enter
+        inputField.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkPass();
             }
         });
 
-        // (Tùy chọn) Tự động phát nhạc khi người dùng click bất kỳ đâu trên màn hình lần đầu tiên
-        // Vì chính sách trình duyệt không cho nhạc tự chạy nếu chưa tương tác
-        function autoPlayOnFirstClick() {
-            audio.play().then(() => {
-                iconUse.setAttribute('href', '#icon-sound-on');
-                iconUse.setAttribute('xlink:href', '#icon-sound-on');
-                isPlaying = true;
-                // Xóa sự kiện này sau khi đã chạy 1 lần
-                document.removeEventListener('click', autoPlayOnFirstClick);
-            }).catch(() => {});
+        // --- HIỆU ỨNG VẬT THỂ RƠI (Giống trang chính) ---
+        function taoVatTheRoi() {
+            const icons = ['✨', '🎈', '🔒', '🔑', '💖'];
+            const icon = document.createElement('div');
+            icon.innerText = icons[Math.floor(Math.random() * icons.length)];
+            icon.classList.add('vat-the-roi');
+            icon.style.left = Math.random() * 100 + 'vw';
+            
+            const size = Math.random() * 20 + 10; // Kích thước ngẫu nhiên
+            icon.style.fontSize = size + 'px';
+            
+            const duration = Math.random() * 3 + 4; // Tốc độ rơi
+            icon.style.animationDuration = duration + 's';
+            
+            document.body.appendChild(icon);
+
+            // Xóa phần tử sau khi rơi xong
+            setTimeout(() => { icon.remove(); }, duration * 1000);
         }
-        document.addEventListener('click', autoPlayOnFirstClick);
-    });
-
-	// ==========================================================
-function taoVatTheRoi() {
-        const icons = ['🌸', '🌼', '🧧', '✨', '💰'];
-        const icon = document.createElement('div');
-        icon.innerText = icons[Math.floor(Math.random() * icons.length)];
-        icon.classList.add('vat-the-roi');
-        icon.style.left = Math.random() * 100 + 'vw';
-        const size = Math.random() * 20 + 15;
-        icon.style.fontSize = size + 'px';
-        const duration = Math.random() * 3 + 4;
-        icon.style.animationDuration = duration + 's';
-        document.body.appendChild(icon);
-        setTimeout(() => { icon.remove(); }, duration * 1000);
-    }
-    setInterval(taoVatTheRoi, 400); 
-
-    // --- PHẦN 2: XỬ LÝ POPUP + ẨN NÚT ---
-    const loiChuc = [
-        "Tiền vào như nước sông Đà\nTiền ra nhỏ giọt như cà phê phin! ☕",
-        "Năm mới chúc bạn:\nSớm có người yêu, ai có rồi thì sớm cưới! 💍",
-        "Công việc thăng tiến vù vù\nSếp thương đồng nghiệp mến! 🚀",
-        "Sức khỏe vô biên\nKiếm được nhiều tiền\nĐời sướng như tiên! 🧚‍♀️",
-        "Bớt 'nghiệp', bớt deadline\nChỉ toàn niềm vui và ting ting! 💸",
-        "Chúc bạn năm nay trúng số độc đắc\n(Nhớ mua vé nhé)! 🎫",
-        "Vạn sự như ý\nTỷ sự như mơ\nTriệu điều bất ngờ! ✨"
-    ];
-
-    function moPopup() {
-        // --- DÒNG MỚI THÊM VÀO ĐÂY ---
-        // Ẩn nút đi ngay lập tức sau khi bấm
-        document.getElementById("nut-li-xi").style.display = "none"; 
-        // -----------------------------
-
-        // Chọn lời chúc ngẫu nhiên
-        const randomChuc = loiChuc[Math.floor(Math.random() * loiChuc.length)];
         
-        // Gán nội dung
-        document.getElementById("loi-chuc-text").innerHTML = randomChuc.replace(/\n/g, "<br>");
-        
-        // Hiển thị popup
-        document.getElementById("popup-lixi").style.display = "flex";
-    }
+        // Tạo mưa icon
+        setInterval(taoVatTheRoi, 500);
 
-    function dongPopup() {
-        // Ẩn popup đi (và nút lì xì vẫn sẽ ẩn, không hiện lại)
-        document.getElementById("popup-lixi").style.display = "none";
-    }
-</script>
-<button id="nut-li-xi" onclick="moPopup()">
-    🧧 Bốc Lì Xì
-</button>
-
-<div id="popup-lixi" class="popup-overlay">
-    <div class="popup-content">
-        <div class="popup-title">🧧 Lộc Đầu Năm 🧧</div>
-        <div id="loi-chuc-text">...</div>
-        <button class="btn-close" onclick="dongPopup()">Nhận Lộc ❤️</button>
-    </div>
-</div>
-<!-- ===================================
-		POPUP
-=================================== -->
-<div id="bd-overlay">
-    <div class="bd-card">
-        <!-- <div class="bd-icon">🎂</div> -->
-		<div class="bd-icon">🌸</div>
-        <!-- <div class="bd-title">Happy Birthday!</div> -->
-        <div class="bd-title">Happy New Year!</div>
-        <div id="bd-msg" class="bd-msg typing-cursor"></div>
-
-        <button id="bd-close" onclick="closePopup()">Close! ❤️</button>
-    </div>
-</div>
-	</body>
-	
+    </script>
+</body>
 </html>
