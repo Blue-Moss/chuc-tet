@@ -4,7 +4,11 @@ index1 (nhập tài mật khẩu) ---> index2(sẽ có các option)|-----> index
                                                         |
                                                         |-----> index3 (tạm chưa có)
 
+index.html: Code pháo hoa (Trang đích cuối cùng).
 
+index1.html: Nhập mật khẩu.
+
+index2.html: Menu chọn (Sảnh chờ).
 ----------------------------------------------------------------------------------------------------------------
 
 Tương lai đổi index1 -- index
