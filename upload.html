@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlueMoss Galaxy Album</title>
+    <style>
+        /* --- CẤU HÌNH CHUNG --- */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #0f172a; /* Màu nền tối hiện đại */
+            color: white;
+            margin: 0; padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 { text-align: center; color: #4ecca3; margin-top: 0; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- PHẦN HIỂN THỊ ẢNH (GALLERY) --- */
+        #gallery {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* 5 ảnh 1 hàng */
+            gap: 10px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 80px; /* Tránh bị nút (+) che mất */
+        }
+
+        .image-card {
+            aspect-ratio: 1; /* Luôn vuông */
+            overflow: hidden;
+            border-radius: 8px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .image-card:hover { transform: scale(1.05); z-index: 10; border-color: #4ecca3; }
+
+        .image-card img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: opacity 0.3s;
+        }
+
+        /* Responsive cho điện thoại (2 ảnh 1 hàng) */
+        @media (max-width: 768px) {
+            #gallery { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* --- NÚT DẤU CỘNG (+) --- */
+        .fab-btn {
+            position: fixed;
+            bottom: 30px; right: 30px;
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, #e94560, #533483);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.5);
+            cursor: pointer;
+            z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s;
+        }
+        .fab-btn:hover { transform: scale(1.1) rotate(90deg); }
+
+        /* --- POPUP (MODAL) UPLOAD --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 200;
+            display: none; /* Mặc định ẩn */
+            justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .upload-box {
+            background: #1e293b;
+            padding: 30px; border-radius: 20px;
+            width: 90%; max-width: 450px;
+            text-align: center;
+            border: 1px solid #475569;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute; top: 10px; right: 15px;
+            font-size: 24px; cursor: pointer; color: #94a3b8;
+        }
+        .close-btn:hover { color: white; }
+
+        /* Style nút upload cũ */
+        input[type="file"] { display: none; }
+        .custom-file-upload {
+            border: 2px dashed #4ecca3; display: block;
+            padding: 20px; cursor: pointer; border-radius: 10px;
+            color: #4ecca3; margin-bottom: 20px;
+            background: rgba(78, 204, 163, 0.1);
+        }
+        .btn-action {
+            background: #4ecca3; border: none; padding: 12px 30px;
+            color: #0f172a; border-radius: 25px; font-weight: bold;
+            cursor: pointer; width: 100%; font-size: 16px;
+        }
+        .btn-action:disabled { background: gray; cursor: not-allowed; }
+
+        .loading-text { margin-top: 10px; font-size: 0.9em; color: yellow; }
+    </style>
+</head>
+<body>
+
+    <h1>🌌 BlueMoss Gallery</h1>
+
+    <div id="gallery">
+        <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding-top: 50px;">
+            Đang tải ảnh từ vũ trụ về... 🛸
+        </div>
+    </div>
+
+    <button class="fab-btn" onclick="toggleModal(true)">+</button>
+
+    <div class="modal-overlay" id="uploadModal">
+        <div class="upload-box">
+            <span class="close-btn" onclick="toggleModal(false)">&times;</span>
+            <h2 style="margin-top: 0;">Thêm Ảnh Mới</h2>
+            
+            <label for="file-input" class="custom-file-upload">
+                📂 Chọn ảnh từ máy
+            </label>
+            <input id="file-input" type="file" multiple accept="image/*" onchange="previewFiles()">
+            
+            <div id="file-count" style="margin-bottom: 15px; color: #ccc;">Chưa chọn ảnh</div>
+            
+            <button id="btn-upload" class="btn-action" onclick="uploadFiles()">🚀 Tải Lên</button>
+            <div id="status" class="loading-text"></div>
+        </div>
+    </div>
+
+    <script>
+        // ================= CẤU HÌNH =================
+        const cloudName = "djerotwoc"; 
+        const uploadPreset = "my_upload"; 
+        const albumTag = "galaxy_album"; // Tag dùng để lọc ảnh của trang này
+        // ============================================
+
+        // 1. HÀM LOAD ẢNH TỪ CLOUD VỀ (Chạy ngay khi mở web)
+        async function loadGallery() {
+            const gallery = document.getElementById('gallery');
+            
+            // URL đặc biệt để lấy danh sách ảnh theo Tag (JSON)
+            // Yêu cầu: Đã bật "Resource list" trong Settings
+            const listUrl = `https://res.cloudinary.com/${cloudName}/image/list/${albumTag}.json`;
+
+            try {
+                const response = await fetch(listUrl);
+                if (!response.ok) throw new Error("Chưa có ảnh hoặc chưa bật List Resource");
+                
+                const data = await response.json();
+                const resources = data.resources;
+
+                gallery.innerHTML = ""; // Xóa chữ "Đang tải..."
+
+                if (resources.length === 0) {
+                    gallery.innerHTML = `<div style="grid-column: 1/-1; text-align: center;">Chưa có ảnh nào. Hãy bấm dấu + để thêm!</div>`;
+                    return;
+                }
+
+                // Duyệt qua danh sách và tạo thẻ img
+                resources.forEach(res => {
+                    const imgUrl = `https://res.cloudinary.com/${cloudName}/image/upload/c_fill,w_300,h_300/${res.public_id}.${res.format}`;
+                    
+                    const div = document.createElement('div');
+                    div.className = 'image-card';
+                    // Thêm sự kiện click để xem ảnh to (nếu muốn mở rộng sau này)
+                    div.onclick = () => window.open(`https://res.cloudinary.com/${cloudName}/image/upload/${res.public_id}.${res.format}`, '_blank');
+                    
+                    div.innerHTML = `<img src="${imgUrl}" alt="Galaxy Image" loading="lazy">`;
+                    gallery.prepend(div); // Ảnh mới nhất lên đầu
+                });
+
+            } catch (error) {
+                console.log("Lỗi load gallery:", error);
+                // Nếu lỗi (thường do chưa có ảnh nào tag là galaxy_album), cứ để trống hoặc hiện thông báo nhẹ
+                gallery.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #64748b;">
+                    Kho ảnh đang trống hoặc chưa bật chế độ Public List.<br>
+                    Bác cứ bấm (+) để up thử cái đầu tiên nhé!
+                </div>`;
+            }
+        }
+
+        // 2. HÀM UPLOAD (Đã sửa để thêm Tag và reload lại trang)
+        async function uploadFiles() {
+            const input = document.getElementById('file-input');
+            const status = document.getElementById('status');
+            const btn = document.getElementById('btn-upload');
+            const files = input.files;
+
+            if (files.length === 0) { alert("Chưa chọn ảnh!"); return; }
+
+            btn.disabled = true;
+            btn.innerText = "Đang tải lên... ⏳";
+
+            let successCount = 0;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                status.innerText = `Đang xử lý: ${file.name}`;
+                
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("upload_preset", uploadPreset);
+                formData.append("tags", albumTag); // <--- QUAN TRỌNG: Gắn thẻ để loadGallery tìm thấy
+
+                try {
+                    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                        method: "POST",
+                        body: formData
+                    });
+                    if (res.ok) successCount++;
+                } catch (err) {
+                    console.error("Lỗi file:", file.name);
+                }
+            }
+
+            // Xử lý sau khi up xong
+            status.innerText = `🎉 Đã xong ${successCount} ảnh!`;
+            setTimeout(() => {
+                toggleModal(false); // Đóng popup
+                loadGallery();      // Load lại danh sách ảnh
+                
+                // Reset form
+                btn.disabled = false;
+                btn.innerText = "🚀 Tải Lên";
+                status.innerText = "";
+                input.value = "";
+                document.getElementById('file-count').innerText = "Chưa chọn ảnh";
+            }, 1000);
+        }
+
+        // 3. CÁC HÀM PHỤ TRỢ (Popup, đếm file)
+        function toggleModal(show) {
+            const modal = document.getElementById('uploadModal');
+            if (show) modal.classList.add('active');
+            else modal.classList.remove('active');
+        }
+
+        function previewFiles() {
+            const input = document.getElementById('file-input');
+            const count = document.getElementById('file-count');
+            if(input.files.length > 0) {
+                count.innerText = `Đã chọn ${input.files.length} file`;
+                count.style.color = "#4ecca3";
+            }
+        }
+
+        // Chạy hàm load ảnh ngay khi vào web
+        window.onload = loadGallery;
+
+    </script>
+</body>
+</html>

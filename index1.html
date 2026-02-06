@@ -3,182 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mystery Gate 🌌</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>Dreamy Gate ☁️</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Quicksand', sans-serif;
-            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Gradient màu Pastel kẹo ngọt */
+            background: linear-gradient(135deg, #a8d8ea 0%, #aa96da 50%, #fcbad3 100%);
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            overflow: hidden;
+            justify-content: center;
+            padding: 20px;
             position: relative;
-            /* Background chuyển động màu vũ trụ */
-            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a0b2e);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: #fff;
+            overflow: hidden;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Hiệu ứng đom đóm/sao bay lên */
-        .firefly {
+        /* --- CÁC KHỐI TRÔI NỔI (BLOBS) --- */
+        .blob {
             position: absolute;
-            bottom: -10%;
-            background: white;
             border-radius: 50%;
-            box-shadow: 0 0 10px #fff, 0 0 20px #ff00de;
-            opacity: 0;
-            animation: flyUp linear infinite;
-            pointer-events: none;
+            filter: blur(60px);
+            opacity: 0.6;
+            animation: float 8s ease-in-out infinite alternate;
+            z-index: 1;
         }
 
-        @keyframes flyUp {
-            0% { bottom: -10%; transform: translateX(0); opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 0.8; }
-            100% { bottom: 110%; transform: translateX(-50px); opacity: 0; }
+        .blob1 {
+            width: 300px; height: 300px;
+            background: #fff; /* Trắng sáng */
+            top: -50px; left: -50px;
         }
 
-        /* Card nhập liệu kính mờ */
-        .login-card {
-            background: rgba(255, 255, 255, 0.05);
+        .blob2 {
+            width: 250px; height: 250px;
+            background: #ffeaa7; /* Vàng nhạt */
+            bottom: -50px; right: -50px;
+            animation-delay: -2s;
+        }
+
+        .blob3 {
+            width: 150px; height: 150px;
+            background: #81ecec; /* Xanh ngọc */
+            top: 40%; left: 20%;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(20px, 40px) scale(1.1); }
+        }
+
+        /* --- CARD CHÍNH --- */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.7); /* Kính mờ hơn */
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 48px 32px;
+            text-align: center;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            padding: 3rem 2.5rem;
-            border-radius: 25px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-top: 1px solid rgba(255, 255, 255, 0.5);
-            border-left: 1px solid rgba(255, 255, 255, 0.5);
-            width: 90%;
-            max-width: 420px;
-            text-align: center;
-            z-index: 10;
-            position: relative;
-            transition: transform 0.3s ease;
-        }
-        
-        .login-card:hover {
-            transform: translateY(-5px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: transform 0.2s;
         }
 
-        .login-card h2 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
+        /* Hiệu ứng rung khi sai */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .shake-anim { animation: shake 0.4s ease-in-out; }
+
+        .icon-wrapper {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #b084e8 0%, #f8a5d3 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            box-shadow: 0 10px 20px rgba(176, 132, 232, 0.3);
+            font-size: 35px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #4a4a4a;
+            margin-bottom: 8px;
             font-weight: 700;
-            /* Chữ gradient */
-            background: linear-gradient(to right, #fff, #b9a3e3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
         }
 
-        .login-card p {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 30px;
-            font-size: 0.95rem;
-            font-weight: 300;
+        .subtitle {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 35px;
         }
 
-        /* Input đẹp hơn */
-        .input-group {
+        /* --- INPUT --- */
+        .input-wrapper {
             position: relative;
-            margin-bottom: 25px;
+            border-radius: 50px;
+            border: 2px solid transparent;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding: 5px 20px;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #b084e8;
+            box-shadow: 0 5px 20px rgba(176, 132, 232, 0.2);
+            transform: translateY(-2px);
         }
 
         input {
-            width: 100%;
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.1);
+            flex: 1;
+            padding: 12px 0;
             border: none;
-            border-radius: 50px;
-            color: #fff;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.1rem;
+            background: transparent;
+            font-size: 16px;
+            color: #333;
             outline: none;
-            text-align: center;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
+        }
+
+        .toggle-password {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px;
+            opacity: 0.5;
             transition: 0.3s;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
         }
+        .toggle-password:hover { opacity: 1; transform: scale(1.1); }
 
-        input::placeholder { color: rgba(255,255,255,0.4); letter-spacing: 1px; }
-
-        input:focus {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(185, 163, 227, 0.5);
-        }
-
-        /* Nút bấm Neon */
-        button {
+        /* --- BUTTON --- */
+        .submit-btn {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
+            background: linear-gradient(135deg, #b084e8 0%, #f8a5d3 100%);
+            color: white;
             border: none;
             border-radius: 50px;
-            background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
-            background-size: 300%;
-            color: #fff;
-            font-size: 1.1rem;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: 0.5s;
-            font-family: 'Quicksand', sans-serif;
+            transition: all 0.3s ease;
+            margin-top: 25px;
+            box-shadow: 0 10px 20px rgba(176, 132, 232, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        button:hover {
-            background-position: right center;
-            box-shadow: 0 0 20px #f441a5;
-            transform: scale(1.02);
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(176, 132, 232, 0.4);
         }
 
-        /* Thông báo */
-        #message {
-            margin-top: 20px;
-            min-height: 25px;
-            font-size: 0.9rem;
-            transition: all 0.3s;
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: wait;
         }
-        
-        .hint-text { color: #f4e04d; font-size: 0.85rem; display: block; margin-top: 5px; }
-        .success-text { color: #00ff88; text-shadow: 0 0 10px #00ff88; }
-        .error-text { color: #ff4757; }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        /* --- MESSAGE --- */
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+            min-height: 20px;
+            font-weight: 600;
         }
-        
-        .shake-anim { animation: shake 0.4s; }
+        .success { color: #2ecc71; }
+        .error { color: #ff6b6b; }
+        .hint-text { color: #f39c12; font-size: 13px; font-weight: normal; margin-top: 5px; display: block;}
+
+        .spinner {
+            width: 18px; height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 15px;
+        }
 
     </style>
 </head>
 <body>
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
 
-    <div id="stars-container"></div>
+    <div class="container">
+        <div class="card">
+            <div class="icon-wrapper">
+                🔒
+            </div>
 
-    <div class="login-card">
-        <h2>LOCKED</h2>
-        <p>Vùng bí mật. Vui lòng xác minh danh tính.</p>
-        
-        <div class="input-group">
-            <input type="password" id="passInput" placeholder="● ● ● ●" autocomplete="off">
+            <h1>Secret Zone</h1>
+            <p class="subtitle">Nhập mật mã để mở cánh cổng</p>
+
+            <form id="passwordForm">
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="passwordInput" 
+                        placeholder="••••" 
+                        required
+                        maxlength="10"
+                    >
+                    <button type="button" class="toggle-password" id="togglePassword"></button>
+                </div>
+                
+                <div class="message" id="message"></div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    Mở Khóa
+                </button>
+            </form>
+
+            <p class="footer">Secure Access • Mystery Gate</p>
         </div>
-        
-        <button onclick="checkPass()">Mở Khóa</button>
-        
-        <div id="message"></div>
     </div>
 
     <script>
@@ -187,89 +253,89 @@
             password: "0206",
             nextPage: "index2.html",
             hints: [
-                "Gợi ý: Ngày sinh nhật của ai đó? 🎂",
-                "Gợi ý: 4 con số định mệnh (ddmm) ✨"
+                "Gợi ý: Ngày sinh nhật 🎂",
+                "Gợi ý: 4 con số (ddmm) ✨"
             ]
         };
 
-        let attempts = 0;
-        const input = document.getElementById('passInput');
+        const form = document.getElementById('passwordForm');
+        const input = document.getElementById('passwordInput');
+        const toggleBtn = document.getElementById('togglePassword');
         const msg = document.getElementById('message');
-        const card = document.querySelector('.login-card');
+        const btn = document.getElementById('submitBtn');
+        const card = document.querySelector('.card');
 
-        function checkPass() {
+        let attempts = 0;
+        let isVisible = false;
+
+        // Ẩn/Hiện mật khẩu
+        toggleBtn.addEventListener('click', () => {
+            isVisible = !isVisible;
+            input.type = isVisible ? 'text' : 'password';
+            toggleBtn.textContent = isVisible ? '' : '';
+        });
+
+        // Xử lý khi bấm nút (hoặc Enter)
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!input.value.trim()) return;
+
+            // 1. Hiệu ứng Loading (Giả lập mạng)
+            btn.disabled = true;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner"></div> Đang kiểm tra...';
+            msg.textContent = '';
+            msg.className = 'message';
+
+            // Đợi 0.8 giây cho cảm giác "xử lý" thật
+            await new Promise(r => setTimeout(r, 800));
+
             const val = input.value;
-            
+
             if (val === CONFIG.password) {
-                // ĐÚNG
-                msg.className = "success-text";
-                msg.innerHTML = "ACCESS GRANTED 🔓<br>Đang dịch chuyển tức thời...";
-                input.style.borderColor = "#00ff88";
+                // --- TRƯỜNG HỢP ĐÚNG ---
+                msg.textContent = '✓ Chính xác! Đang chuyển hướng...';
+                msg.className = 'message success';
+                input.style.borderColor = "#2ecc71";
                 
                 setTimeout(() => {
                     window.location.href = CONFIG.nextPage;
-                }, 1500);
+                }, 1000);
+
             } else {
-                // SAI
+                // --- TRƯỜNG HỢP SAI ---
                 attempts++;
-                input.value = "";
-                input.focus();
                 
-                // Hiệu ứng rung
+                // Reset nút bấm
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                
+                // Rung lắc báo lỗi
                 card.classList.add('shake-anim');
                 setTimeout(() => card.classList.remove('shake-anim'), 400);
 
-                msg.className = "error-text";
-                
+                // Hiển thị thông báo lỗi & Gợi ý
+                msg.className = 'message error';
+                input.value = "";
+                input.focus();
+
                 if (attempts === 1) {
-                    msg.innerHTML = "Mật khẩu không đúng.";
+                   msg.innerHTML = `Sai rồi.<br><span class="hint-text">${CONFIG.hints[0]}</span>`;
                 } else if (attempts === 2) {
-                    msg.innerHTML = CONFIG.hints[0];
+                     msg.innerHTML = `Cố lên nào.<br><span class="hint-text">${CONFIG.hints[1]}</span>`;
                 } else if (attempts === 3) {
-                    msg.innerHTML = CONFIG.hints[1];
-                } else {
-                    msg.innerHTML = `Thôi được rồi, pass là: <b>${CONFIG.password}</b>`;
+                     msg.innerHTML = `Thôi được rồi, pass là: <b>${CONFIG.password}</b>`;
                     input.value = CONFIG.password;
                 }
             }
-        }
-
-        // Enter để submit
-        input.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") checkPass();
         });
 
-        // --- HIỆU ỨNG BỤI SAO/ĐOM ĐÓM ---
-        function createFirefly() {
-            const star = document.createElement('div');
-            star.classList.add('firefly');
-            
-            // Random vị trí và kích thước
-            const size = Math.random() * 6 + 2; // 2px - 8px
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            star.style.left = Math.random() * 100 + 'vw';
-            
-            // Random màu sắc lung linh (Trắng, Xanh lơ, Tím hồng)
-            const colors = ['#ffffff', '#00f2ff', '#bd00ff'];
-            star.style.background = colors[Math.floor(Math.random() * colors.length)];
-            star.style.boxShadow = `0 0 ${size * 2}px ${star.style.background}`;
-
-            // Random tốc độ bay
-            const duration = Math.random() * 5 + 5; // 5s - 10s
-            star.style.animationDuration = duration + 's';
-
-            document.body.appendChild(star);
-
-            // Xóa sau khi bay xong
-            setTimeout(() => { star.remove(); }, duration * 1000);
-        }
-
-        // Tạo nhiều sao lúc đầu
-        for(let i=0; i<15; i++) setTimeout(createFirefly, i * 300);
-        // Duy trì tạo sao mới
-        setInterval(createFirefly, 400);
-
+        // Xóa thông báo lỗi khi gõ lại
+        input.addEventListener('input', () => {
+            msg.textContent = '';
+            msg.className = 'message';
+        });
     </script>
 </body>
 </html>
