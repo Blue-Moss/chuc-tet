@@ -553,14 +553,23 @@ store.subscribe(handleStateChange);
 
 // Mảng câu chúc màu hồng
 const WISH_MESSAGES = [
-	"Chúc em sinh nhật thật vui và nhiều niềm vui 🎂",
-	"Chúc em tuổi mới luôn bình an và an yên trong lòng 🌿",
-	"Chúc những điều em mong ước sớm trở thành hiện thực ✨",
-	"Chúc em luôn khỏe mạnh và tràn đầy năng lượng 💪",
-	"Chúc mỗi ngày của em đều có lý do để mỉm cười 😊",
-	"Chúc em gặp thật nhiều may mắn và điều tốt đẹp 🍀",
-	"Chúc em luôn hạnh phúc theo cách riêng của mình ❤️",
-	"Chúc tuổi mới mang đến cho em nhiều kỷ niệm đẹp 🎉",
+
+    "Chúc cô gái xinh đẹp ngày Valentine ngập tràn niềm vui 🌹",
+
+    "Mong cậu luôn rạng rỡ và yêu đời như thế này nhé ✨",
+
+    "Valentine vui vẻ! Chúc em nhận được thật nhiều sự ngọt ngào 🍫",
+
+    "Nụ cười của em chính là món quà đẹp nhất ngày hôm nay rồi 😊",
+
+    "Chúc em một ngày lễ thật ấm áp, xinh tươi và hạnh phúc 🧸",
+
+    "Thế giới trở nên dịu dàng hơn nhờ có sự xuất hiện của em 🌸",
+
+    "Cô gái đáng yêu như em xứng đáng với những điều tốt đẹp nhất 💖",
+
+    "Chúc em luôn là phiên bản hạnh phúc nhất của chính mình 💌",
+
 ];
 
 
