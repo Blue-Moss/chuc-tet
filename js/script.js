@@ -556,7 +556,7 @@ const WISH_MESSAGES = [
 
     "Chúc cô gái xinh đẹp ngày Valentine ngập tràn niềm vui 🌹",
 
-    "Mong cậu luôn rạng rỡ và yêu đời như thế này nhé ✨",
+    "Mong em luôn rạng rỡ và yêu đời như thế này nhé ✨",
 
     "Valentine vui vẻ! Chúc em nhận được thật nhiều sự ngọt ngào 🍫",
 
