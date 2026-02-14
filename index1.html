@@ -254,7 +254,7 @@
             nextPage: "index2.html",
             hints: [
                 "Gợi ý: Ngày sinh nhật 🎂",
-                "Gợi ý: 4 con số (ddmm) ✨"
+                "Gợi ý: 4 con số (ngày/tháng) ✨"
             ]
         };
 
@@ -289,7 +289,7 @@
             msg.className = 'message';
 
             // Đợi 0.8 giây cho cảm giác "xử lý" thật
-            await new Promise(r => setTimeout(r, 800));
+            await new Promise(r => setTimeout(r, 500));
 
             const val = input.value;
 
@@ -301,7 +301,7 @@
                 
                 setTimeout(() => {
                     window.location.href = CONFIG.nextPage;
-                }, 1000);
+                }, 100);
 
             } else {
                 // --- TRƯỜNG HỢP SAI ---
