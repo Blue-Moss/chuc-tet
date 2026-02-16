@@ -1,0 +1,35 @@
+html, * {
+    height: 100vh;
+}
+body {
+    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
+    background: #79a8ae;
+    color: #CFEBE4;
+    font-size: 18px;
+    line-height: 2;
+    letter-spacing: 1.2px;
+    margin: 0;
+}
+.body--ready {
+    background: black;
+}
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+#rainCanvas, .canvas {
+z-index: 1;
+}
+
+#fireCanvas {
+z-index: 2;
+display: none;
+}
+
+#fireCanvas {
+    z-index: 3;
+    display: none;
+}
