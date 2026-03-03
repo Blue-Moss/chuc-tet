@@ -363,32 +363,33 @@ body {
 }
 
 /* =========================================== */
-/* 1. Nút Bốc Lì Xì (Giữ nguyên) */
+    /* 1. Nút Mở Quà */
     #nut-li-xi {
         position: fixed;
         bottom: 20px;
         right: 20px;
         z-index: 9999;
-        background: linear-gradient(to bottom, #ea2d2d, #a80000);
-        color: #ffeb3b;
+        background: linear-gradient(to right, #ff7eb3, #ff758c);
+        color: #ffffff;
         padding: 12px 25px;
         border-radius: 50px;
-        border: 2px solid #ffeb3b;
+        border: 2px solid #ffffff;
         font-family: Arial, sans-serif;
         font-weight: bold;
         font-size: 18px;
         cursor: pointer;
-        box-shadow: 0 4px 15px rgba(255, 0, 0, 0.6);
+        box-shadow: 0 4px 15px rgba(255, 117, 140, 0.6);
         animation: lac-lu 1s infinite alternate;
         transition: transform 0.2s;
     }
     #nut-li-xi:hover { transform: scale(1.1); }
+     
     @keyframes lac-lu {
         0% { transform: rotate(-5deg); }
         100% { transform: rotate(5deg); }
     }
 
-    /* 2. Hiệu ứng vật thể rơi (Giữ nguyên) */
+    /* 2. Hiệu ứng vật thể rơi */
     .vat-the-roi {
         position: fixed;
         top: -50px;
@@ -404,72 +405,115 @@ body {
         100% { top: 110vh; transform: translateX(100px) rotate(360deg); opacity: 0; }
     }
 
-    /* 3. POPUP (MỚI) - Đẹp lung linh */
+    /* 3. POPUP (MỚI) - Đã sửa font chữ cho dễ đọc */
     .popup-overlay {
-        display: none; /* Mặc định ẩn */
+        display: none; 
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.7); /* Nền tối mờ */
+        background-color: rgba(0, 0, 0, 0.6);
         z-index: 10000;
         justify-content: center;
         align-items: center;
+        backdrop-filter: blur(5px);
     }
 
     .popup-content {
-        background: linear-gradient(135deg, #fff0f0, #ffecec);
+        background: linear-gradient(135deg, #ffffff, #fff0f5);
         width: 90%;
         max-width: 400px;
         padding: 30px;
-        border-radius: 20px;
-        border: 4px solid #d60000;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        border-radius: 25px;
+        border: 4px solid #ff69b4;
+        box-shadow: 0 0 25px rgba(255, 105, 180, 0.6);
         text-align: center;
-        animation: phong-to 0.4s ease-out; /* Hiệu ứng bung ra */
+        animation: phong-to 0.4s ease-out;
         position: relative;
     }
 
-    /* Trang trí viền hoa văn đơn giản */
     .popup-content::before {
-        content: "🌸";
-        position: absolute; top: 10px; left: 10px; font-size: 25px;
+        content: "🎈";
+        position: absolute; top: 10px; left: 15px; font-size: 28px;
+        animation: float-balloon 3s ease-in-out infinite;
     }
     .popup-content::after {
-        content: "🌸";
-        position: absolute; top: 10px; right: 10px; font-size: 25px;
+        content: "🎂";
+        position: absolute; top: 10px; right: 15px; font-size: 28px;
+        animation: float-balloon 3s ease-in-out infinite 1.5s;
     }
 
+    @keyframes float-balloon {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    /* --- PHẦN CHỈNH SỬA QUAN TRỌNG --- */
     .popup-title {
-        color: #d60000;
-        font-size: 24px;
-        font-weight: bold;
+        color: #c71585; /* Đổi sang màu đỏ tím đậm cho nổi bật */
+        font-size: 28px; /* Tăng kích thước */
+        font-weight: 700; /* Làm đậm chữ */
         margin-bottom: 15px;
         text-transform: uppercase;
-        border-bottom: 2px dashed #ffb100;
+        border-bottom: 3px dotted #ffd700;
         padding-bottom: 10px;
+        font-family: 'Dancing Script', cursive, sans-serif;
+        text-shadow: 1px 1px 0px #fff; /* Tạo viền trắng nhẹ cho chữ tách khỏi nền */
     }
 
     #loi-chuc-text {
-        font-size: 18px;
-        color: #333;
-        line-height: 1.5;
+        /* Đổi font sang Arial/Verdana cho tròn trịa, dễ đọc hơn kiểu chữ viết tay mảnh */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        font-size: 19px; /* Chữ to hơn */
+        color: #2c3e50; /* Màu xanh đen đậm, cực dễ đọc trên nền hồng */
+        line-height: 1.6;
         margin-bottom: 25px;
-        font-weight: 500;
+        font-weight: 600; /* Chữ dày hơn */
     }
+    /* -------------------------------- */
 
     .btn-close {
-        background-color: #d60000;
+        background-color: #ff69b4;
         color: white;
         border: none;
-        padding: 10px 30px;
-        border-radius: 8px;
+        padding: 12px 35px;
+        border-radius: 50px;
         font-size: 16px;
+        font-weight: bold;
         cursor: pointer;
-        transition: background 0.3s;
+        transition: all 0.3s;
+        box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
     }
-    .btn-close:hover { background-color: #a80000; }
+    .btn-close:hover { 
+        background-color: #ff1493;
+        transform: translateY(-2px);
+    }
+
+	#bd-msg {
+        /* Font Mali dễ đọc */
+        font-family: 'Mali', cursive, sans-serif; 
+        font-size: 18px; 
+        line-height: 1.8; 
+        color: #eae2e2;
+        min-height: 100px; 
+        white-space: pre-wrap;
+        
+        /* Căn trái */
+        text-align: left; 
+        
+        /* --- ĐÃ XÓA MÀU NỀN VÀ VIỀN --- */
+        background-color: transparent; /* Nền trong suốt */
+        border: none;                  /* Không viền */
+        padding: 0;                    /* Bỏ đệm để chữ gọn gàng hơn */
+    }
+
+    .bd-title {
+        font-family: 'Dancing Script', cursive;
+        font-size: 35px; 
+        color: #d63384; 
+        margin-bottom: 20px;
+    }
 
     @keyframes phong-to {
         from { transform: scale(0.5); opacity: 0; }
@@ -502,7 +546,50 @@ body {
     transform: scale(0.8); opacity: 0;
     transition: all 0.5s ease;
 }
+.card-loi-chuc {
+    /* --- 1. XỬ LÝ KÍCH THƯỚC (Để giống nhau trên mọi thiết bị) --- */
+    /* Mẹo: Dùng min() để bảo: Trên máy tính thì rộng 500px, 
+       nhưng trên điện thoại (nhỏ hơn 500px) thì lấy 90% màn hình */
+    width: min(90%, 500px); 
+    margin: 20px auto; /* Căn giữa màn hình */
+    
+    /* --- 2. XỬ LÝ XUỐNG DÒNG (\n) --- */
+    /* ĐÂY LÀ DÒNG QUAN TRỌNG NHẤT: Biến \n thành xuống dòng thật */
+    white-space: pre-line; 
+    
+    /* --- 3. TRANG TRÍ GIAO DIỆN --- */
+    background-color: rgba(0, 0, 0, 0.75); /* Nền tối mờ */
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    
+    /* --- 4. CỐ ĐỊNH PHÔNG CHỮ (Chống lỗi font lạ trên iPhone) --- */
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;       /* Cỡ chữ chuẩn dễ đọc */
+    line-height: 1.6;      /* Khoảng cách dòng thoáng */
+    font-weight: 500;      /* Độ dày chữ vừa phải */
+    font-style: normal;    /* Bắt buộc chữ đứng (không nghiêng) */
+    text-align: left;      /* Canh lề trái cho giống lá thư */
+}
+.container-text {
+    /* --- PHẦN NỀN TỐI (Đã có) --- */
+    background-color: rgba(0, 0, 0, 0.7); /* Tăng độ tối lên 0.7 cho dễ đọc hơn */
+    border-radius: 15px;
+    padding: 20px;
+    color: #ffffff !important;
 
+    /* --- PHẦN SỬA CHỮ (Thêm mới) --- */
+    /* 1. Đổi sang phông không chân (giống Facebook/Web thường) */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+    
+    /* 2. Bắt buộc chữ đứng thẳng (Bỏ in nghiêng) */
+    font-style: normal !important;
+    
+    /* 3. Chỉnh độ dày và khoảng cách dòng */
+    font-weight: 500;
+    line-height: 1.6;
+}
 .bd-card.show {
     transform: scale(1); opacity: 1;
 }
@@ -555,3 +642,39 @@ body {
 #bd-close.visible {
     opacity: 1; pointer-events: auto; transform: translateY(0);
 }
+
+/* Dùng dấu thăng # để trỏ đích danh ID -> Quyền lực cao hơn class */
+#msg-container {
+    /* Ép buộc dùng font hệ thống (giống Facebook/Zalo) */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    
+    /* Cực kỳ quan trọng: Ép chữ đứng thẳng, KHÔNG ĐƯỢC nghiêng */
+    font-style: normal !important; 
+    
+    /* Chỉnh màu và độ dày */
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    
+    /* Reset các hiệu ứng lạ của template */
+    text-shadow: none !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    
+    /* Giữ nguyên định dạng khung */
+    white-space: pre-line !important;
+    width: min(90%, 500px) !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    padding: 20px !important;
+    border-radius: 15px !important;
+    margin: 20px auto !important;
+}
+
+/* Đề phòng trường hợp template dùng thẻ <p> hoặc <span> bên trong */
+#msg-container * {
+    font-family: inherit !important;
+    font-style: normal !important;
+    color: #ffffff !important;
+}
+

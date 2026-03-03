@@ -78,13 +78,12 @@ const imageSources = [
 	// "./images/image5.jpeg",
 	"./images/1.JPG",
 	"./images/2.jpg",
-	"./images/3.jpg",
-	"./images/4.JPG",
+	"./images/3.png",
+	// "./images/4.jpg",
 	"./images/5.jpg",
 	"./images/6.jpg",
-	"./images/7.JPG",
-	"./images/8.jpg",
-	"./images/9.jpg",
+	"./images/7.jpg",
+	
 ];
 const loadedImages = [];
 const imageBursts = [];
@@ -554,15 +553,25 @@ store.subscribe(handleStateChange);
 
 // Mảng câu chúc màu hồng
 const WISH_MESSAGES = [
-	"Năm mới an khang thịnh vượng",
-	"Năm mới bình an",
-	"Chúc mọi điều ước của em đều trở thành hiện thực ✨",
-	"Chúc gia đình em luôn bình an và hạnh phúc ❤️",
-	"Chúc em luôn khỏe mạnh và tràn đầy năng lượng 💪",
-	"Chúc công việc thuận lợi, thăng tiến không ngừng 🚀",
-	"Chúc em luôn mỉm cười và yêu đời mỗi ngày 😊",
-	"Chúc em gặp nhiều may mắn và niềm vui 🎉",
+
+    "Chúc cô gái xinh đẹp ngày Valentine ngập tràn niềm vui 🌹",
+
+    "Mong em luôn rạng rỡ và yêu đời như thế này nhé ✨",
+
+    "Valentine vui vẻ! Chúc em nhận được thật nhiều sự ngọt ngào 🍫",
+
+    "Nụ cười của em chính là món quà đẹp nhất ngày hôm nay rồi 😊",
+
+    "Chúc em một ngày lễ thật ấm áp, xinh tươi và hạnh phúc 🧸",
+
+    "Thế giới trở nên dịu dàng hơn nhờ có sự xuất hiện của em 🌸",
+
+    "Cô gái đáng yêu như em xứng đáng với những điều tốt đẹp nhất 💖",
+
+    "Chúc em luôn là phiên bản hạnh phúc nhất của chính mình 💌",
+
 ];
+
 
 // Sinh 1 câu chúc bay lên
 function spawnWishMessage() {
@@ -3261,28 +3270,16 @@ if (IS_HEADER) {
 // ===================================================
 
 // --- CẤU HÌNH LỜI CHÚC ---
-// const loiChucSinhNhat = "Chúc mừng sinh nhật cậu! 🎂\n\nTuổi mới chúc cậu luôn rạng rỡ như pháo hoa, tiền nhiều như nước, bớt deadline và luôn vui vẻ nhé! Happy Birthday! ✨";
+// const loiChucSinhNhat = "Xin chào không biết e có đọc được tin nhắn này không nhưng mà “ Chúc em SNVV nha , mong rằng mọi thứ với em đều thuận lợi và gặp thật nhiều may mắn nha 😁“ \nKo biết cs của e dạo này sao rồi, mong rằng mọi thứ đều tốt 😆.\nNhớ cười nhiều lên nha, ăn ít đồ cay thôi, ngủ sớm và ra ngoài nhớ khoác áo vô nha 😁 \nTẠM BIỆT 😁";
 
-const loiChucSinhNhat = "Chúc mừng năm mới! 🌸\n\nChúc anh năm mới đau đầu vì nhà giàu, mệt mỏi vì học giỏi, buồn phiền vì nhiều tiền, ngang trái vì xinh gái, và mất ngủ vì không có đối thủ. 😎 ✨";
-// 1. Đợi 10 giây (10000ms) sau khi tải trang thì mở Popup
-setTimeout(() => {
-    const overlay = document.getElementById('bd-overlay');
-    const card = document.querySelector('.bd-card');
-    
-    overlay.style.display = 'flex';
-    // Timeout nhỏ để CSS transition hoạt động (hiệu ứng zoom)
-    setTimeout(() => { 
-        card.classList.add('show'); 
-        // Bắt đầu chạy chữ
-        typeWriter(loiChucSinhNhat, 'bd-msg');
-    }, 100);
-}, 10000);
+
+
 
 // 2. Hàm gõ chữ (Typewriter)
 function typeWriter(text, elementId) {
     const element = document.getElementById(elementId);
     let i = 0;
-    const tocDoGo = 50; // Tốc độ gõ (càng nhỏ càng nhanh)
+    const tocDoGo = 10; // Tốc độ gõ (càng nhỏ càng nhanh)
 
     function typing() {
         if (i < text.length) {

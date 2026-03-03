@@ -1,0 +1,168 @@
+<!-- <!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Lời Nhắn 📝</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Mali:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Courier Prime', monospace; /* Font kiểu máy đánh chữ */
+            background-color: #050505;
+            color: #00ff41; /* Màu xanh hacker cổ điển */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: radial-gradient(circle, #111 0%, #000 100%);
+        }
+
+        .notepad-container {
+            width: 100%;
+            max-width: 600px;
+            background: #000;
+            border: 1px solid #333;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            padding: 20px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        h2 {
+            text-align: center;
+            border-bottom: 2px dashed #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            background: #111;
+            border: 1px solid #333;
+            color: #ddd;
+            padding: 10px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #00ff41;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #00ff41;
+            color: #000;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-family: 'Courier Prime', monospace;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #00cc33;
+            box-shadow: 0 0 10px #00ff41;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* Hiệu ứng trang trí */
+        .decor-line {
+            color: #333;
+            text-align: center;
+            margin: 10px 0;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="notepad-container">
+        <h2>System_Log_Recorder</h2>
+        
+        <form id="noteForm" action="https://formspree.io/f/mwvneyrr" method="POST">
+            
+            <div class="input-group">
+                <label>> Nhập tên định danh (User ID):</label>
+                <input type="text" name="name" required placeholder="Ví dụ: Người lạ, Tên bạn..." autocomplete="off">
+            </div>
+
+            <div class="decor-line">------------------------------------</div>
+
+            <div class="input-group">
+                <label>> Nội dung ghi chú (Data):</label>
+                <textarea name="message" required placeholder="Viết gì đó vào đây..."></textarea>
+            </div>
+
+            <button type="submit">LƯU VÀO HỆ THỐNG</button>
+        </form>
+
+        <p class="status-message" id="status">Đang gửi dữ liệu về máy chủ...</p>
+    </div>
+
+    <script>
+        const form = document.getElementById("noteForm");
+        const status = document.getElementById("status");
+
+        form.addEventListener("submit", async function(event) {
+            event.preventDefault();
+            status.style.display = "block";
+            status.innerHTML = "⏳ Đang kết nối vệ tinh...";
+            
+            const data = new FormData(event.target);
+            
+            fetch(event.target.action, {
+                method: form.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    status.innerHTML = "✅ Đã lưu Note thành công!";
+                    status.style.color = "#00ff41";
+                    form.reset();
+                } else {
+                    status.innerHTML = "❌ Lỗi kết nối. Thử lại sau.";
+                    status.style.color = "red";
+                }
+            }).catch(error => {
+                status.innerHTML = "❌ Lỗi mạng!";
+                status.style.color = "red";
+            });
+        });
+    </script>
+</body>
+</html>-->

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BlueMoss Album</title>
+    <style>
+        /* --- 1. CẤU HÌNH GIAO DIỆN CHUNG (LIGHT THEME) --- */
+        :root {
+            --primary-color: #3b82f6; /* Xanh dương hiện đại */
+            --bg-color: #f3f4f6;      /* Xám rất nhạt */
+            --card-bg: #ffffff;       /* Trắng tinh */
+            --text-main: #1f2937;     /* Chữ đen xám */
+            --text-sub: #6b7280;      /* Chữ xám nhạt */
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 16px;           /* Bo góc lớn kiểu iOS */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0; 
+            padding: 20px 16px; /* Padding chuẩn mobile */
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- HEADER --- */
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-top: 10px;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2563eb, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        p.subtitle {
+            margin: 5px 0 0;
+            color: var(--text-sub);
+            font-size: 14px;
+        }
+
+        /* --- GALLERY GRID (RESPONSIVE IPHONE 14 PRO MAX) --- */
+        #gallery {
+            display: grid;
+            /* Mặc định mobile: 2 cột */
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 100px; /* Chừa chỗ cho nút (+) */
+        }
+
+        /* Tablet & PC: Nhiều cột hơn */
+        @media (min-width: 768px) {
+            #gallery { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        }
+
+        .image-card {
+            aspect-ratio: 1; /* Vuông */
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .image-card:active { transform: scale(0.98); } /* Hiệu ứng nhấn trên mobile */
+        @media (min-width: 1024px) {
+            .image-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        }
+
+        .image-card img {
+            width: 100%; height: 100%; object-fit: cover;
+            display: block;
+            transition: opacity 0.3s;
+        }
+
+        /* --- NÚT FAB (+) ĐẸP HƠN --- */
+        .fab-btn {
+            position: fixed;
+            bottom: 30px; right: 24px;
+            width: 64px; height: 64px; /* To hơn dễ bấm */
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 32px;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5); /* Bóng đổ màu xanh */
+            cursor: pointer;
+            z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s;
+        }
+        .fab-btn:active { transform: scale(0.9); }
+
+        /* --- MODAL UPLOAD (Giao diện thẻ trắng sạch) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* Nền tối mờ */
+            backdrop-filter: blur(8px); /* Hiệu ứng kính mờ iOS */
+            z-index: 200;
+            display: none;
+            justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .upload-box {
+            background: var(--card-bg);
+            padding: 30px 24px; 
+            border-radius: 24px;
+            width: 85%; max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .close-btn {
+            position: absolute; top: 16px; right: 20px;
+            font-size: 28px; color: #9ca3af; cursor: pointer; padding: 5px;
+        }
+        
+        .custom-file-upload {
+            border: 2px dashed #bfdbfe; 
+            background: #eff6ff;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 30px 20px; 
+            border-radius: 16px;
+            color: var(--primary-color); 
+            font-weight: 600;
+            margin-bottom: 20px; cursor: pointer;
+            transition: 0.2s;
+        }
+        .custom-file-upload:active { background: #dbeafe; border-color: var(--primary-color); }
+
+        .btn-action {
+            background: var(--primary-color);
+            border: none; padding: 14px;
+            color: white; border-radius: 12px;
+            font-weight: 600; font-size: 16px;
+            cursor: pointer; width: 100%;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+            transition: 0.2s;
+        }
+        .btn-action:disabled { background: #9ca3af; box-shadow: none; }
+        .btn-action:active { transform: scale(0.98); }
+
+        /* --- LIGHTBOX (XEM ẢNH FULL) --- */
+        .lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 300;
+            display: none;
+            justify-content: center; align-items: center;
+        }
+        .lightbox.active { display: flex; }
+
+        .lightbox img {
+            max-width: 100%; max-height: 80vh;
+            object-fit: contain;
+            /* Hiệu ứng zoom nhẹ khi mở */
+            animation: zoomIn 0.25s ease-out;
+        }
+        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Nút điều hướng Lightbox */
+        .lb-close {
+            position: absolute; top: 40px; right: 20px; /* Cách xa tai thỏ iPhone */
+            font-size: 32px; color: white; padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%; width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 302;
+        }
+
+        .lb-nav {
+            position: absolute; bottom: 40px; /* Đưa xuống dưới cho dễ bấm bằng ngón cái */
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(4px);
+            color: white; font-size: 24px;
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 302;
+            user-select: none;
+        }
+        .lb-nav:active { background: rgba(255,255,255,0.4); }
+        .lb-prev { left: 24px; }
+        .lb-next { right: 24px; }
+
+        .loading-text { margin-top: 15px; color: #6b7280; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>My Album 📸</h1>
+        <p class="subtitle">Khoảnh khắc đáng nhớ</p>
+    </header>
+
+    <div id="gallery">
+        <div style="grid-column: 1/-1; text-align: center; color: #9ca3af; padding-top: 50px;">
+            <p>Đang đồng bộ dữ liệu...</p>
+        </div>
+    </div>
+
+    <button class="fab-btn" onclick="toggleModal(true)">
+        <span style="margin-top: -4px;">+</span>
+    </button>
+
+    <div class="modal-overlay" id="uploadModal">
+        <div class="upload-box">
+            <span class="close-btn" onclick="toggleModal(false)">&times;</span>
+            <h3 style="margin: 0 0 20px 0; color: #1f2937;">Tải Ảnh Lên</h3>
+            
+            <label for="file-input" class="custom-file-upload">
+                <span style="font-size: 30px; margin-bottom: 10px;">☁️</span>
+                <span>Chạm để chọn ảnh</span>
+            </label>
+            <input id="file-input" type="file" multiple accept="image/*" onchange="previewFiles()">
+            
+            <div id="file-count" style="margin-bottom: 20px; color: #6b7280; font-size: 14px;">Chưa có ảnh nào</div>
+            
+            <button id="btn-upload" class="btn-action" onclick="uploadFiles()">Bắt đầu tải lên</button>
+            <div id="status" class="loading-text"></div>
+        </div>
+    </div>
+
+    <div id="lightbox" class="lightbox">
+        <div class="lb-close" onclick="closeLightbox()">&times;</div>
+        
+        <img id="lightbox-img" src="" alt="Full Image">
+        
+        <div class="lb-nav lb-prev" onclick="changeImage(-1)">❮</div>
+        <div class="lb-nav lb-next" onclick="changeImage(1)">❯</div>
+    </div>
+
+    <script>
+        // ================= CẤU HÌNH (GIỮ NGUYÊN) =================
+        const cloudName = "djerotwoc"; 
+        const uploadPreset = "my_upload"; 
+        const albumTag = "galaxy_album"; 
+
+        let galleryImages = []; 
+        let currentIndex = 0;
+
+        // 1. LOAD ẢNH
+        async function loadGallery() {
+            const gallery = document.getElementById('gallery');
+            const listUrl = `https://res.cloudinary.com/${cloudName}/image/list/${albumTag}.json`;
+
+            try {
+                const response = await fetch(listUrl);
+                if (!response.ok) throw new Error("Chưa có ảnh");
+                
+                const data = await response.json();
+                let resources = data.resources;
+
+                // Sắp xếp: Mới nhất lên đầu
+                resources.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                gallery.innerHTML = ""; 
+                galleryImages = []; 
+
+                if (resources.length === 0) {
+                    gallery.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #9ca3af;">Album trống. Hãy tải ảnh đầu tiên!</div>`;
+                    return;
+                }
+
+                resources.forEach((res, index) => {
+                    // Tối ưu ảnh nhỏ (w_400 cho màn hình Retina/iPhone đẹp hơn)
+                    const thumbUrl = `https://res.cloudinary.com/${cloudName}/image/upload/c_fill,w_400,h_400,q_auto,f_auto/${res.public_id}.${res.format}`;
+                    const fullUrl = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/${res.public_id}.${res.format}`;
+                    
+                    galleryImages.push(fullUrl);
+
+                    const div = document.createElement('div');
+                    div.className = 'image-card';
+                    div.onclick = () => openLightbox(index);
+                    
+                    // Thêm loading="lazy" và hiệu ứng fade-in
+                    div.innerHTML = `<img src="${thumbUrl}" alt="Photo" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`;
+                    gallery.appendChild(div);
+                });
+
+            } catch (error) {
+                gallery.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #9ca3af; padding: 20px;">
+                    <p style="font-size: 40px; margin:0">🐣</p>
+                    <p>Chưa có ảnh nào.</p>
+                </div>`;
+            }
+        }
+
+        // 2. LIGHTBOX LOGIC
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+
+        function openLightbox(index) {
+            currentIndex = index;
+            updateLightboxImage();
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Khóa cuộn trang nền
+            document.addEventListener('keydown', handleKeydown);
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = ''; // Mở khóa cuộn
+            setTimeout(() => { lightboxImg.src = ""; }, 200);
+            document.removeEventListener('keydown', handleKeydown);
+        }
+
+        function changeImage(direction) {
+            currentIndex += direction;
+            if (currentIndex >= galleryImages.length) currentIndex = 0;
+            if (currentIndex < 0) currentIndex = galleryImages.length - 1;
+            updateLightboxImage();
+        }
+
+        function updateLightboxImage() {
+            lightboxImg.style.opacity = 0.5;
+            lightboxImg.src = galleryImages[currentIndex];
+            lightboxImg.onload = () => { lightboxImg.style.opacity = 1; };
+        }
+
+        function handleKeydown(e) {
+            if (e.key === "Escape") closeLightbox();
+            if (e.key === "ArrowRight") changeImage(1);
+            if (e.key === "ArrowLeft") changeImage(-1);
+        }
+        
+        // Đóng khi bấm vào vùng đen (trừ ảnh và nút)
+        lightbox.onclick = (e) => {
+            if (e.target === lightbox) closeLightbox();
+        }
+
+        // 3. UPLOAD LOGIC
+        async function uploadFiles() {
+            const input = document.getElementById('file-input');
+            const status = document.getElementById('status');
+            const btn = document.getElementById('btn-upload');
+            const files = input.files;
+
+            if (files.length === 0) { alert("Bạn chưa chọn ảnh nào!"); return; }
+
+            btn.disabled = true;
+            btn.innerText = "Đang tải lên... ⏳";
+            let successCount = 0;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                status.innerText = `Đang xử lý ${i+1}/${files.length}: ${file.name}`;
+                
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("upload_preset", uploadPreset);
+                formData.append("tags", albumTag);
+
+                try {
+                    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                        method: "POST", body: formData
+                    });
+                    if (res.ok) successCount++;
+                } catch (err) { console.error(err); }
+            }
+
+            status.innerText = `🎉 Hoàn tất ${successCount} ảnh!`;
+            status.style.color = "#10b981"; // Màu xanh lá
+            
+            setTimeout(() => {
+                toggleModal(false);
+                loadGallery();
+                btn.disabled = false;
+                btn.innerText = "Bắt đầu tải lên";
+                status.innerText = "";
+                status.style.color = "#6b7280";
+                input.value = "";
+                document.getElementById('file-count').innerText = "Chưa có ảnh nào";
+            }, 1500);
+        }
+
+        function toggleModal(show) {
+            const modal = document.getElementById('uploadModal');
+            if (show) modal.classList.add('active');
+            else modal.classList.remove('active');
+        }
+
+        function previewFiles() {
+            const input = document.getElementById('file-input');
+            const count = document.getElementById('file-count');
+            if(input.files.length > 0) {
+                count.innerText = `Đã chọn ${input.files.length} ảnh`;
+                count.style.color = "#3b82f6";
+                count.style.fontWeight = "bold";
+            }
+        }
+
+        window.onload = loadGallery;
+    </script>
+</body>
+</html>
